@@ -6,6 +6,9 @@ struct VenueCandidate: Identifiable, Hashable, Sendable {
     var latitude: Double
     var longitude: Double
     var distance: Double
+    /// `MKMapItem.identifier`, which links the stop to a lasting place (SPEC §6).
+    var mapItemIdentifier: String? = nil
+    var address: String? = nil
 
     var id: String { "\(name)|\(latitude)|\(longitude)" }
 }
@@ -25,17 +28,22 @@ final class VenueNamer: VenueNaming {
 
     func candidates(latitude: Double, longitude: Double, limit: Int) async -> [VenueCandidate] {
         let center = CLLocation(latitude: latitude, longitude: longitude)
+        // MapKit throws (not returns an error) for an invalid coordinate, and the backfill
+        // feeds it stored data on every launch until it finishes.
+        guard CLLocationCoordinate2DIsValid(center.coordinate) else { return [] }
         let request = MKLocalPointsOfInterestRequest(center: center.coordinate, radius: Self.searchRadius)
         request.pointOfInterestFilter = MKPointOfInterestFilter(including: Self.categories)
         guard let response = try? await MKLocalSearch(request: request).start() else { return [] }
         return response.mapItems
             .compactMap { item -> VenueCandidate? in
-                guard let name = item.name, let location = item.placemark.location else { return nil }
+                guard let name = item.name else { return nil }
                 return VenueCandidate(
                     name: name,
-                    latitude: location.coordinate.latitude,
-                    longitude: location.coordinate.longitude,
-                    distance: location.distance(from: center)
+                    latitude: item.location.coordinate.latitude,
+                    longitude: item.location.coordinate.longitude,
+                    distance: item.location.distance(from: center),
+                    mapItemIdentifier: item.identifier?.rawValue,
+                    address: item.address?.shortAddress
                 )
             }
             .sorted { $0.distance < $1.distance }
@@ -45,10 +53,12 @@ final class VenueNamer: VenueNaming {
 
     func address(latitude: Double, longitude: Double) async -> String? {
         let location = CLLocation(latitude: latitude, longitude: longitude)
-        guard let placemark = try? await CLGeocoder().reverseGeocodeLocation(location).first else { return nil }
-        if let street = placemark.thoroughfare {
-            return [street, placemark.subThoroughfare].compactMap { $0 }.joined(separator: " ")
+        guard let request = MKReverseGeocodingRequest(location: location),
+              let item = try? await request.mapItems.first else { return nil }
+        // The short address reads "street number, city"; the street part alone is enough here.
+        if let street = item.address?.shortAddress?.split(separator: ",").first {
+            return street.trimmingCharacters(in: .whitespaces)
         }
-        return placemark.name
+        return item.name
     }
 }
