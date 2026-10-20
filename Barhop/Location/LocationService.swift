@@ -24,6 +24,8 @@ final class LocationService: NSObject, LocationProviding {
 
     /// Accuracy a one-shot fix must reach to count as precise.
     nonisolated private static let preciseAccuracy: CLLocationAccuracy = 50
+    /// How old a one-shot fix may be; older ones are Core Location's cached position.
+    nonisolated private static let maxFixAge: TimeInterval = 10
 
     override init() {
         authorization = manager.authorizationStatus
@@ -62,13 +64,15 @@ final class LocationService: NSObject, LocationProviding {
 
     func currentFix(timeout: Duration) async -> LocationFix? {
         guard !isAuthorizationDenied else { return nil }
+        let oldestAccepted = Date.now.addingTimeInterval(-Self.maxFixAge)
         return await withTaskGroup(of: LocationFix?.self) { group in
             group.addTask {
                 do {
                     for try await update in CLLocationUpdate.liveUpdates() {
                         guard let location = update.location,
                               location.horizontalAccuracy >= 0,
-                              location.horizontalAccuracy <= Self.preciseAccuracy else { continue }
+                              location.horizontalAccuracy <= Self.preciseAccuracy,
+                              location.timestamp >= oldestAccepted else { continue }
                         return LocationFix(location)
                     }
                 } catch {}

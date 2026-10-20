@@ -66,6 +66,12 @@ struct TrailFilterTests {
         var recovered = TrailFilter(resumingFrom: last, startNewSegment: true)
         #expect(recovered.process(LocationUpdate(fix: fix(30, northMeters: 10))).map(\.segment) == [3])
     }
+
+    @Test func dropsFixesFromBeforeTheNight() {
+        var filter = TrailFilter(notBefore: fix(120).timestamp)
+        #expect(filter.process(LocationUpdate(fix: fix(0))).isEmpty)
+        #expect(filter.process(LocationUpdate(fix: fix(120))).count == 1)
+    }
 }
 
 struct TrailGeometryTests {

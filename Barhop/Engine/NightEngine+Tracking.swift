@@ -28,7 +28,7 @@ extension NightEngine {
         let lastPoint = night.trailPoints.max { $0.timestamp < $1.timestamp }.map {
             TrailFilter.AcceptedPoint(fix: $0.fix, segment: $0.segment)
         }
-        trailFilter = TrailFilter(resumingFrom: lastPoint, startNewSegment: startNewSegment)
+        trailFilter = TrailFilter(notBefore: night.startedAt, resumingFrom: lastPoint, startNewSegment: startNewSegment)
         stopDetector = StopDetector()
         if let openVenue = night.currentVenue {
             _ = stopDetector.anchor(at: openVenue.fix)

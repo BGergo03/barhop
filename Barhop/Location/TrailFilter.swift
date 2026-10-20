@@ -13,14 +13,17 @@ struct TrailFilter {
     }
 
     private(set) var segment: Int
+    private let notBefore: Date?
     private var lastAccepted: LocationFix?
     private var lastReceivedAt: Date?
     private var pausedWhileStationary = false
 
     /// - Parameters:
+    ///   - notBefore: the night's start; earlier fixes are dropped.
     ///   - lastPoint: the night's latest recorded point, if any.
     ///   - startNewSegment: true after a recovery restart (SPEC §5).
-    init(resumingFrom lastPoint: AcceptedPoint? = nil, startNewSegment: Bool = false) {
+    init(notBefore: Date? = nil, resumingFrom lastPoint: AcceptedPoint? = nil, startNewSegment: Bool = false) {
+        self.notBefore = notBefore
         guard let lastPoint else {
             segment = 0
             return
@@ -36,6 +39,8 @@ struct TrailFilter {
 
     mutating func process(_ update: LocationUpdate) -> [AcceptedPoint] {
         guard let fix = update.fix else { return [] }
+        // Core Location opens with its last cached fix, which can predate the night.
+        if let notBefore, fix.timestamp < notBefore { return [] }
         var accepted: [AcceptedPoint] = []
 
         if let lastReceivedAt, fix.timestamp.timeIntervalSince(lastReceivedAt) > Self.gapThreshold {

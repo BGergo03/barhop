@@ -79,6 +79,20 @@ struct VenueTests {
         #expect(venue.arrivedAt == testFix(0).timestamp)
     }
 
+    @Test func cachedFixFromBeforeTheNightDoesNotBackdateVenue() async throws {
+        let engine = makeEngine()
+        let night = engine.startNight(at: testFix(120).timestamp)
+        // Core Location opens with the fix it cached during an earlier night.
+        location.send(testFix(0))
+        location.fix = testFix(180)
+        engine.logBeer(at: testFix(180).timestamp)
+        await TestSupport.settle()
+
+        #expect(night.trailPoints.isEmpty)
+        let venue = try #require(night.venues.first)
+        #expect(venue.arrivedAt == testFix(180).timestamp)
+    }
+
     @Test func walkingAwayClosesVenueAtLastPointInside() async throws {
         let engine = makeEngine()
         let night = engine.startNight(at: testFix(0).timestamp)
