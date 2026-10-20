@@ -25,6 +25,9 @@
     "Adds a beer to your night, starting a night if none is active." : {
 
     },
+    "Also shortens the 30 minute grace period to 30 seconds." : {
+
+    },
     "Auto-close after" : {
 
     },
@@ -47,6 +50,9 @@
 
     },
     "Custom name…" : {
+
+    },
+    "Debug" : {
 
     },
     "Delete" : {
@@ -158,6 +164,9 @@
 
     },
     "Timeline" : {
+
+    },
+    "Treat hours as minutes" : {
 
     },
     "Undo last beer" : {
