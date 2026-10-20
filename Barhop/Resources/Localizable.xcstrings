@@ -37,6 +37,9 @@
     "Delete this night?" : {
 
     },
+    "Distance" : {
+
+    },
     "Done" : {
 
     },
@@ -59,6 +62,9 @@
 
     },
     "Liters" : {
+
+    },
+    "Location is off. Turn it on in Settings to map your night." : {
 
     },
     "No beers yet" : {

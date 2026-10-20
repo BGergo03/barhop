@@ -7,6 +7,13 @@ struct LiveNightView: View {
 
     var body: some View {
         VStack(spacing: Theme.Spacing.medium) {
+            if engine.isLocationDenied {
+                LocationOffPrompt()
+                    .padding(.horizontal, Theme.Spacing.medium)
+            } else {
+                TrailMap(night: night, isLive: true)
+                    .frame(height: Theme.Size.liveMapHeight)
+            }
             header
             Button("+1 Beer") {
                 engine.logBeer()
@@ -51,6 +58,5 @@ struct LiveNightView: View {
                 .animation(.default, value: night.beerCount)
         }
         .padding(.horizontal, Theme.Spacing.large)
-        .padding(.top, Theme.Spacing.medium)
     }
 }

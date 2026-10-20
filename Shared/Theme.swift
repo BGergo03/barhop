@@ -13,6 +13,8 @@ enum Theme {
         static let secondaryText = Color.secondary
         static let background = Color(uiColor: .systemBackground)
         static let surface = Color(uiColor: .secondarySystemBackground)
+        static let trail = Color.accentColor
+        static let trailGap = Color.secondary
     }
 
     enum Typography {
@@ -37,5 +39,12 @@ enum Theme {
 
     enum Size {
         static let primaryButtonHeight: CGFloat = 72
+        static let liveMapHeight: CGFloat = 280
+        static let reportMapHeight: CGFloat = 240
+    }
+
+    enum Stroke {
+        static let trail = StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round)
+        static let trailGap = StrokeStyle(lineWidth: 3, lineCap: .round, dash: [6, 8])
     }
 }

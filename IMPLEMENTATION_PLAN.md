@@ -92,6 +92,7 @@ Simulator/        BudapestCrawl.gpx
 ### M2 — Location trail + live map
 - `LocationService`: on night start, request When-In-Use (once), open a `CLBackgroundActivitySession`, run `for try await update in CLLocationUpdate.liveUpdates()` in a task owned by the engine; cancel both on end.
 - `TrailFilter` (pure): drop `horizontalAccuracy > 100`; accept if ≥ 50 m from last accepted **or** ≥ 5 min since last accepted; assigns `segment`, incrementing when the gap since the last *received* update is > 10 min.
+  - Exception: Core Location pauses `liveUpdates` once it reports the device as stationary (e.g. sitting in a bar). Silence after a stationary update is **not** a gap: when updates resume, a "hold" point is recorded at the last position just before the resuming fix, so the stay stays in one segment and stop detection (M3) sees its full length.
 - Trail saving: insert points as accepted, `save()` at most every 30 s and on `scenePhase == .background`.
 - `currentFix(timeout: 5s)` one-shot helper for entry locations (fallback: latest trail point). Wire into `logBeer`.
 - `TrailMap` component (MapKit for SwiftUI): solid `MapPolyline` per segment, dashed polyline between the last point of segment *n* and first of *n+1*, `UserAnnotation`.

@@ -49,6 +49,7 @@
 		0D0000000000000000000031 /* Barhop.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Barhop.entitlements; sourceTree = "<group>"; };
 		0D0000000000000000000032 /* BarhopWidgets-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BarhopWidgets-Info.plist"; sourceTree = "<group>"; };
 		0D0000000000000000000033 /* BarhopWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BarhopWidgets.entitlements; sourceTree = "<group>"; };
+		0D0000000000000000000034 /* BudapestCrawl.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = BudapestCrawl.gpx; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -107,6 +108,7 @@
 				0D0000000000000000000012 /* Shared */,
 				0D0000000000000000000013 /* BarhopTests */,
 				0D0000000000000000000004 /* Config */,
+				0D0000000000000000000005 /* Simulator */,
 				0D0000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -130,6 +132,14 @@
 				0D0000000000000000000033 /* BarhopWidgets.entitlements */,
 			);
 			path = Config;
+			sourceTree = "<group>";
+		};
+		0D0000000000000000000005 /* Simulator */ = {
+			isa = PBXGroup;
+			children = (
+				0D0000000000000000000034 /* BudapestCrawl.gpx */,
+			);
+			path = Simulator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
