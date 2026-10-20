@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ per hour" : {
+
+    },
     "%lld hours" : {
 
     },
@@ -16,6 +19,9 @@
     "📍 %lld" : {
 
     },
+    "—" : {
+
+    },
     "Auto-close after" : {
 
     },
@@ -26,6 +32,12 @@
 
     },
     "Cancel" : {
+
+    },
+    "Card (PNG)" : {
+
+    },
+    "Copy sticker" : {
 
     },
     "Custom name" : {
@@ -73,6 +85,9 @@
     "Location is off. Turn it on in Settings to map your night." : {
 
     },
+    "Longest gap" : {
+
+    },
     "Name" : {
 
     },
@@ -85,7 +100,13 @@
     "No places found nearby" : {
 
     },
+    "Pace" : {
+
+    },
     "Past nights" : {
+
+    },
+    "Places" : {
 
     },
     "Resume night" : {
@@ -97,7 +118,16 @@
     "Settings" : {
 
     },
+    "Share" : {
+
+    },
+    "Show map on share" : {
+
+    },
     "Start night" : {
+
+    },
+    "Sticker (PNG)" : {
 
     },
     "Stop %lld" : {

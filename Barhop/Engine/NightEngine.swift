@@ -89,6 +89,11 @@ final class NightEngine {
         save()
     }
 
+    func setShowMapOnShare(_ shows: Bool, for night: Night) {
+        night.showMapOnShare = shows
+        save()
+    }
+
     func deleteNight(_ night: Night) {
         context.delete(night)
         save()

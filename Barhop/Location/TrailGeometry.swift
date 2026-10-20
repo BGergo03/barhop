@@ -28,7 +28,11 @@ enum TrailGeometry {
 
     /// Distance walked in meters, excluding the gaps between segments.
     static func walkedDistance(_ points: [TrailPoint]) -> CLLocationDistance {
-        segments(points).reduce(0) { total, segment in
+        walkedDistance(segments: segments(points))
+    }
+
+    static func walkedDistance(segments: [[CLLocationCoordinate2D]]) -> CLLocationDistance {
+        segments.reduce(0) { total, segment in
             total + zip(segment, segment.dropFirst()).reduce(0) { sum, pair in
                 sum + CLLocation(latitude: pair.0.latitude, longitude: pair.0.longitude)
                     .distance(from: CLLocation(latitude: pair.1.latitude, longitude: pair.1.longitude))
