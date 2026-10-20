@@ -61,7 +61,7 @@
          </BuildableReference>
       </BuildableProductRunnable>
       <LocationScenarioReference
-         identifier = "Simulator/BudapestCrawl.gpx"
+         identifier = "Simulator/BudapestCrawlShort.gpx"
          referenceType = "0">
       </LocationScenarioReference>
    </LaunchAction>
