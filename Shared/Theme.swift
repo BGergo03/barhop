@@ -17,6 +17,15 @@ enum Theme {
         static let trailGap = Color.secondary
         static let venuePin = Color.orange
         static let activityBackground = Color.black.opacity(0.6)
+        /// Share renders don't follow the device appearance, so they use fixed colors.
+        static let shareBackground = Color(red: 0.07, green: 0.07, blue: 0.09)
+        static let shareText = Color.white
+        static let shareSecondaryText = Color.white.opacity(0.7)
+        static let shareTrail = Color.orange
+        static let shareTrailGap = Color.white.opacity(0.6)
+        static let shareVenuePin = Color.orange
+        static let shareVenuePinRing = Color.white
+        static let stickerShadow = Color.black.opacity(0.45)
     }
 
     enum Typography {
@@ -31,11 +40,18 @@ enum Theme {
         static let activityButton = Font.headline
         static let compactTimer = Font.body.monospacedDigit()
         static let activityUndo = Font.caption.weight(.semibold)
+        static let shareWordmark = Font.system(size: 28, weight: .heavy, design: .rounded)
+        static let shareTitle = Font.system(size: 20, weight: .semibold, design: .rounded)
+        static let shareStatValue = Font.system(size: 34, weight: .bold, design: .rounded).monospacedDigit()
+        static let shareStatLabel = Font.system(size: 13, weight: .medium, design: .rounded)
+        static let shareBody = Font.system(size: 15, weight: .medium, design: .rounded)
+        static let stickerStatValue = Font.system(size: 30, weight: .bold, design: .rounded).monospacedDigit()
     }
 
     enum Radius {
         static let button: CGFloat = 20
         static let card: CGFloat = 16
+        static let shareMap: CGFloat = 20
     }
 
     enum Spacing {
@@ -50,10 +66,23 @@ enum Theme {
         static let reportMapHeight: CGFloat = 240
         /// `Text(_, style: .timer)` claims all available width; this keeps the Dynamic Island compact.
         static let compactTimerWidth: CGFloat = 52
+        /// 1080×1920 px at the 3× render scale.
+        static let shareCard = CGSize(width: 360, height: 640)
+        static let shareCardPadding: CGFloat = 28
+        static let shareMapHeight: CGFloat = 260
+        static let stickerWidth: CGFloat = 320
+        static let stickerTrail = CGSize(width: 260, height: 220)
+        static let stickerPin: CGFloat = 8
+        static let shareMapPin: CGFloat = 14
+        static let shareMapPinRing: CGFloat = 3
+        static let stickerShadowRadius: CGFloat = 4
+        static let shareRenderScale: CGFloat = 3
     }
 
     enum Stroke {
         static let trail = StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round)
         static let trailGap = StrokeStyle(lineWidth: 3, lineCap: .round, dash: [6, 8])
+        static let shareTrail = StrokeStyle(lineWidth: 4, lineCap: .round, lineJoin: .round)
+        static let shareTrailGap = StrokeStyle(lineWidth: 2.5, lineCap: .round, dash: [5, 7])
     }
 }
