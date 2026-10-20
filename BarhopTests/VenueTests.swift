@@ -9,9 +9,10 @@ struct VenueTests {
     let location = FakeLocationProvider()
     let namer = FakeVenueNamer()
     let liveActivity = FakeLiveActivity()
+    let reminders = FakeReminders()
 
     func makeEngine() -> NightEngine {
-        NightEngine(context: container.mainContext, location: location, namer: namer, liveActivity: liveActivity)
+        NightEngine(context: container.mainContext, location: location, namer: namer, liveActivity: liveActivity, reminders: reminders, autoClose: { .neverInTests })
     }
 
     func candidate(_ name: String) -> VenueCandidate {

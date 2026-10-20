@@ -7,12 +7,15 @@ extension NightEngine {
     private static let trailSaveInterval: TimeInterval = 30
     private static let entryFixTimeout: Duration = .seconds(5)
 
-    /// Restarts tracking for an active night after the app was relaunched
-    /// (including a background relaunch by Core Location). The restart opens a new segment.
+    /// Recovery on launch and foreground (SPEC §5), including a background relaunch by
+    /// Core Location: closes an ignored night, otherwise restarts tracking in a new segment.
     func resumeTrackingIfNeeded() {
         // Also restarts the Live Activity if it is gone (~8 h limit, or a background start failed).
-        refreshLiveActivity()
-        guard trackedNight == nil, let night = activeNight else { return }
+        runMaintenance()
+        guard let night = activeNight else { return }
+        // Repairs the reminder too, e.g. after the auto-close setting changed.
+        scheduleStillOutReminder(for: night)
+        guard trackedNight == nil else { return }
         startTracking(night, startNewSegment: true)
     }
 
@@ -42,6 +45,7 @@ extension NightEngine {
     }
 
     private func handle(_ update: LocationUpdate) {
+        runMaintenance()
         guard let night = trackedNight else { return }
         let accepted = trailFilter.process(update)
         guard !accepted.isEmpty else { return }

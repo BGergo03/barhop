@@ -98,13 +98,14 @@ struct CrawlReportTests {
     let location = FakeLocationProvider()
     let namer = FakeVenueNamer()
     let liveActivity = FakeLiveActivity()
+    let reminders = FakeReminders()
 
     static func time(_ hhmmss: String) -> Date {
         try! Date("2026-10-24T\(hhmmss)Z", strategy: .iso8601)
     }
 
     @Test func crawlNightMatchesHandCalculation() async throws {
-        let engine = NightEngine(context: container.mainContext, location: location, namer: namer, liveActivity: liveActivity)
+        let engine = NightEngine(context: container.mainContext, location: location, namer: namer, liveActivity: liveActivity, reminders: reminders, autoClose: { .neverInTests })
         let night = engine.startNight(at: Self.time("18:55:00"))
 
         // One beer at Lámpás, Szimpla Kert and Doboz, two at Mazel Tov.

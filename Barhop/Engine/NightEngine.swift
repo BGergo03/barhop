@@ -12,14 +12,17 @@ final class NightEngine {
         context: ModelContainerFactory.shared.mainContext,
         location: LocationService(),
         namer: VenueNamer(),
-        liveActivity: LiveActivityController()
+        liveActivity: LiveActivityController(),
+        reminders: NotificationService()
     )
 
-    // Shared with the extensions in NightEngine+Tracking.swift, +Venues.swift and +LiveActivity.swift.
+    // Shared with the extensions in NightEngine+Tracking.swift, +Venues.swift, +LiveActivity.swift and +AutoClose.swift.
     @ObservationIgnored let context: ModelContext
     @ObservationIgnored let location: LocationProviding
     @ObservationIgnored let namer: VenueNaming
     @ObservationIgnored let liveActivity: LiveActivityControlling
+    @ObservationIgnored let reminders: StillOutReminding
+    @ObservationIgnored let autoClose: @MainActor () -> AutoClose
     @ObservationIgnored let logger = Logger(subsystem: "com.bgergo03.barhop", category: "NightEngine")
     @ObservationIgnored var trackedNight: Night?
     @ObservationIgnored var trailFilter = TrailFilter()
@@ -27,11 +30,23 @@ final class NightEngine {
     @ObservationIgnored var lastTrailSave = Date.distantPast
     @ObservationIgnored var undoOffer: UndoOffer?
 
-    init(context: ModelContext, location: LocationProviding, namer: VenueNaming, liveActivity: LiveActivityControlling) {
+    init(
+        context: ModelContext,
+        location: LocationProviding,
+        namer: VenueNaming,
+        liveActivity: LiveActivityControlling,
+        reminders: StillOutReminding,
+        autoClose: @escaping @MainActor () -> AutoClose = { AutoClose.current() }
+    ) {
         self.context = context
         self.location = location
         self.namer = namer
         self.liveActivity = liveActivity
+        self.reminders = reminders
+        self.autoClose = autoClose
+        reminders.onResponse = { [weak self] response, nightID in
+            self?.handleStillOutResponse(response, nightID: nightID)
+        }
     }
 
     var isLocationDenied: Bool { location.isAuthorizationDenied }
@@ -52,6 +67,8 @@ final class NightEngine {
         let night = Night(startedAt: date)
         context.insert(night)
         save()
+        reminders.requestAuthorization()
+        scheduleStillOutReminder(for: night)
         startTracking(night, startNewSegment: false)
         return night
     }
@@ -71,9 +88,10 @@ final class NightEngine {
         let entry = Entry(drink: .beer, at: date)
         context.insert(entry)
         entry.night = night
-        night.lastActivityAt = date
+        night.lastActivityAt = max(night.lastActivityAt, date)
         offerUndo(for: entry)
         save()
+        scheduleStillOutReminder(for: night)
         return entry
     }
 
@@ -95,6 +113,7 @@ final class NightEngine {
     func endNight(_ night: Night, reason: EndReason = .manual, at date: Date = .now) {
         guard night.isActive else { return }
         if trackedNight == night { stopTracking() }
+        reminders.cancel(nightID: night.id)
         closeOpenVenue(of: night, at: date)
         night.endedAt = date
         night.endReason = reason
@@ -114,6 +133,7 @@ final class NightEngine {
     private func refreshLastActivity(of night: Night) {
         night.lastActivityAt = night.entries.map(\.timestamp).max() ?? night.startedAt
         save()
+        scheduleStillOutReminder(for: night)
     }
 
     func save() {

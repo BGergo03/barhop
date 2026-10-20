@@ -50,6 +50,8 @@ extension NightEngine: NightIntentHandling {
     }
 
     func logBeerFromIntent() async {
+        // An ignored night ends first, so this beer starts a new one instead of reviving it.
+        runMaintenance()
         let entry = insertBeer(at: .now)
         // Wait for the fix here rather than in a detached task: the app may be suspended
         // as soon as the intent returns.
@@ -57,6 +59,7 @@ extension NightEngine: NightIntentHandling {
     }
 
     func undoLastEntryFromIntent(entryID: UUID?) {
+        runMaintenance()
         undoLastEntry(expectedID: entryID)
     }
 }
