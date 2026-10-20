@@ -28,9 +28,12 @@ struct HomeView: View {
                 }
                 .floatingCardRow()
                 .swipeActions {
-                    Button("Delete", role: .destructive) {
+                    // No destructive role: it makes the List remove the row before the
+                    // confirmation dialog, then put it back while the dialog is up.
+                    Button("Delete") {
                         nightPendingDeletion = night
                     }
+                    .tint(Theme.Palette.danger)
                 }
             }
         }
