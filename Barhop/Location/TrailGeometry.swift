@@ -22,6 +22,11 @@ enum TrailGeometry {
         segmentFixes(points).map { $0.map(\.coordinate) }
     }
 
+    /// Plain points per segment, for drawings made off the SwiftData context.
+    static func segmentPoints(_ points: [TrailPoint]) -> [[MapPoint]] {
+        segmentFixes(points).map { $0.map { MapPoint(latitude: $0.latitude, longitude: $0.longitude) } }
+    }
+
     /// Straight connectors from the end of each segment to the start of the next, drawn dashed.
     static func gaps<Point>(between segments: [[Point]]) -> [[Point]] {
         zip(segments, segments.dropFirst()).compactMap { previous, next in

@@ -5,11 +5,6 @@ import Foundation
 /// Everything the share card and sticker show (SPEC §9), copied out of the night as plain
 /// values so it can be rendered later, off the SwiftData context.
 struct ShareContent: Sendable, Equatable {
-    struct Coordinate: Sendable, Equatable {
-        var latitude: Double
-        var longitude: Double
-    }
-
     /// Venue names listed on the card before collapsing the rest into "+N more".
     static let maxListedVenues = 6
 
@@ -23,8 +18,8 @@ struct ShareContent: Sendable, Equatable {
     /// Ordered by arrival.
     var venueNames: [String]
     /// Coordinates per trail segment.
-    var segments: [[Coordinate]]
-    var venues: [Coordinate]
+    var segments: [[MapPoint]]
+    var venues: [MapPoint]
     var showsMap: Bool
 
     /// Whether there is a trail or a venue to draw.
@@ -51,9 +46,6 @@ extension ShareContent {
     @MainActor
     init(night: Night, now: Date = .now) {
         let stats = ReportStats(night: night, now: now)
-        let segments = TrailGeometry.segmentFixes(night.trailPoints).map { segment in
-            segment.map { Coordinate(latitude: $0.latitude, longitude: $0.longitude) }
-        }
         self.init(
             startedAt: night.startedAt,
             title: night.title,
@@ -62,45 +54,9 @@ extension ShareContent {
             liters: stats.liters,
             distance: night.trailPoints.isEmpty ? nil : stats.distance,
             venueNames: stats.venues.map(\.name),
-            segments: segments,
-            venues: night.venues.sorted { $0.arrivedAt < $1.arrivedAt }.map { Coordinate(latitude: $0.latitude, longitude: $0.longitude) },
+            segments: TrailGeometry.segmentPoints(night.trailPoints),
+            venues: night.venues.sorted { $0.arrivedAt < $1.arrivedAt }.map(\.mapPoint),
             showsMap: night.showMapOnShare
-        )
-    }
-}
-
-/// Projects the trail into a fixed box for the sticker, north up, keeping its proportions.
-struct TrailProjection {
-    let size: CGSize
-    private let center: ShareContent.Coordinate
-    /// Points per degree of latitude; longitude is scaled by cos(latitude) on top.
-    private let scale: Double
-    private let longitudeFactor: Double
-
-    /// - Parameters:
-    ///   - coordinates: everything that must fit (trail and venues).
-    ///   - size: the box; the trail is centered in it.
-    ///   - inset: margin kept free on every side, e.g. for line width and pins.
-    init(fitting coordinates: [ShareContent.Coordinate], in size: CGSize, inset: CGFloat) {
-        self.size = size
-        let latitudes = coordinates.map(\.latitude)
-        let longitudes = coordinates.map(\.longitude)
-        let minLat = latitudes.min() ?? 0, maxLat = latitudes.max() ?? 0
-        let minLon = longitudes.min() ?? 0, maxLon = longitudes.max() ?? 0
-        center = .init(latitude: (minLat + maxLat) / 2, longitude: (minLon + maxLon) / 2)
-        longitudeFactor = cos(center.latitude * .pi / 180)
-        let spanY = maxLat - minLat
-        let spanX = (maxLon - minLon) * longitudeFactor
-        let available = (width: max(1, Double(size.width - 2 * inset)), height: max(1, Double(size.height - 2 * inset)))
-        let candidates = [spanX > 0 ? available.width / spanX : nil, spanY > 0 ? available.height / spanY : nil].compactMap { $0 }
-        // A single point (or nothing) just sits in the middle.
-        scale = candidates.min() ?? 0
-    }
-
-    func point(for coordinate: ShareContent.Coordinate) -> CGPoint {
-        CGPoint(
-            x: size.width / 2 + (coordinate.longitude - center.longitude) * longitudeFactor * scale,
-            y: size.height / 2 - (coordinate.latitude - center.latitude) * scale
         )
     }
 }

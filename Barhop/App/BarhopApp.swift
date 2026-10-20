@@ -19,6 +19,8 @@ struct BarhopApp: App {
             RootView()
                 .environment(NightEngine.shared)
                 .preferredColorScheme(Theme.colorScheme)
+                .tint(Theme.Palette.accent)
+                .fontDesign(Theme.fontDesign)
         }
         .modelContainer(ModelContainerFactory.shared)
         .onChange(of: scenePhase) { _, phase in

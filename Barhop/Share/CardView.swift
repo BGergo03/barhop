@@ -10,7 +10,10 @@ struct CardView: View {
         VStack(alignment: .leading, spacing: Theme.Spacing.large) {
             VStack(alignment: .leading, spacing: Theme.Spacing.small / 2) {
                 Text("Barhop")
+                    .textCase(.uppercase)
                     .font(Theme.Typography.shareWordmark)
+                    .tracking(Theme.Typography.wordmarkTracking)
+                    .foregroundStyle(Theme.Gradients.accent)
                 Text(content.title)
                     .font(Theme.Typography.shareTitle)
                     .foregroundStyle(Theme.Palette.shareSecondaryText)
@@ -35,7 +38,12 @@ struct CardView: View {
         .foregroundStyle(Theme.Palette.shareText)
         .padding(Theme.Size.shareCardPadding)
         .frame(width: Theme.Size.shareCard.width, height: Theme.Size.shareCard.height, alignment: .topLeading)
-        .background(Theme.Palette.shareBackground)
+        .background {
+            ZStack {
+                Theme.Palette.shareBackground
+                Theme.Gradients.backdropGlow
+            }
+        }
     }
 
     /// Ordered names on a few wrapped lines, so a long crawl still fits under the map.
@@ -44,7 +52,9 @@ struct CardView: View {
         let route = listed.names.joined(separator: " → ")
         return VStack(alignment: .leading, spacing: Theme.Spacing.small / 2) {
             Text("\(content.venueNames.count) places")
+                .textCase(.uppercase)
                 .font(Theme.Typography.shareStatLabel)
+                .tracking(Theme.Typography.labelTracking)
                 .foregroundStyle(Theme.Palette.shareSecondaryText)
             Group {
                 if listed.more > 0 {
@@ -64,6 +74,7 @@ struct CardView: View {
 struct ShareStatsGrid: View {
     let content: ShareContent
     let valueFont: Font
+    var labelColor: Color = Theme.Palette.shareSecondaryText
 
     var body: some View {
         Grid(alignment: .leading, horizontalSpacing: Theme.Spacing.large, verticalSpacing: Theme.Spacing.medium) {
@@ -87,8 +98,10 @@ struct ShareStatsGrid: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
             Text(label)
+                .textCase(.uppercase)
                 .font(Theme.Typography.shareStatLabel)
-                .foregroundStyle(Theme.Palette.shareSecondaryText)
+                .tracking(Theme.Typography.labelTracking)
+                .foregroundStyle(labelColor)
         }
     }
 }

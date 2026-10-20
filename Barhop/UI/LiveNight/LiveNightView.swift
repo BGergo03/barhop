@@ -1,43 +1,44 @@
 import SwiftUI
 
+/// The night in progress: the map fills the screen, with the stats floating on top and the
+/// big "+1 Beer" at the bottom. The timeline opens as a sheet.
 struct LiveNightView: View {
     let night: Night
     @Environment(NightEngine.self) private var engine
     @State private var confirmsEnd = false
     @State private var selectedVenue: Venue?
     @State private var editingEntry: Entry?
+    @State private var showsTimeline = false
 
     var body: some View {
-        VStack(spacing: Theme.Spacing.medium) {
-            if engine.isLocationDenied {
-                LocationOffPrompt()
-                    .padding(.horizontal, Theme.Spacing.medium)
-            } else {
-                TrailMap(night: night, isLive: true, selectedVenue: $selectedVenue)
-                    .frame(height: Theme.Size.liveMapHeight)
+        ZStack {
+            backdrop
+            VStack(spacing: Theme.Spacing.medium) {
+                statsPanel
+                if engine.isLocationDenied {
+                    LocationOffPrompt()
+                        .card()
+                }
+                Spacer()
+                beerPanel
             }
-            header
-            Button("+1 Beer") {
-                engine.logBeer()
-            }
-            .buttonStyle(.primary)
-            .sensoryFeedback(.success, trigger: night.beerCount)
-            .padding(.horizontal, Theme.Spacing.medium)
-
-            List {
-                EntryTimelineSection(night: night, editingEntry: $editingEntry)
-            }
+            .padding(.horizontal, Theme.Spacing.screen)
+            .padding(.bottom, Theme.Spacing.small)
         }
         .navigationTitle(night.title)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
             Button("End night", role: .destructive) {
                 confirmsEnd = true
             }
+            .buttonStyle(.destructiveSecondary)
         }
-        // Sheets hang off the screen, not the List rows, so they survive the List re-rendering.
         .sheet(item: $selectedVenue) { venue in
             VenueSheet(venue: venue)
+        }
+        .sheet(isPresented: $showsTimeline) {
+            TimelineSheet(night: night)
         }
         .entryTimeEditor($editingEntry)
         .confirmationDialog("End this night?", isPresented: $confirmsEnd, titleVisibility: .visible) {
@@ -47,23 +48,125 @@ struct LiveNightView: View {
         }
     }
 
-    private var header: some View {
-        HStack(alignment: .firstTextBaseline) {
-            VStack(alignment: .leading, spacing: Theme.Spacing.small / 2) {
+    @ViewBuilder
+    private var backdrop: some View {
+        if engine.isLocationDenied {
+            ZStack {
+                Theme.Palette.background
+                Theme.Gradients.backdropGlow
+            }
+            .ignoresSafeArea()
+        } else {
+            TrailMap(night: night, isLive: true, selectedVenue: $selectedVenue)
+                // Keeps the camera and map controls clear of the floating panels.
+                .safeAreaPadding(.top, Theme.Size.liveMapTopInset)
+                .safeAreaPadding(.bottom, Theme.Size.liveMapBottomInset)
+                .overlay(alignment: .top) {
+                    Theme.Gradients.mapTopScrim
+                        .frame(height: Theme.Size.liveMapTopInset)
+                        .allowsHitTesting(false)
+                }
+                .overlay(alignment: .bottom) {
+                    Theme.Gradients.mapBottomScrim
+                        .frame(height: Theme.Size.liveMapBottomInset)
+                        .allowsHitTesting(false)
+                }
+                .ignoresSafeArea()
+        }
+    }
+
+    private var statsPanel: some View {
+        HStack(alignment: .center, spacing: Theme.Spacing.medium) {
+            VStack(alignment: .leading, spacing: Theme.Spacing.xSmall) {
                 Text(night.startedAt, style: .timer)
                     .font(Theme.Typography.timer)
-                if let venue = night.currentVenue {
-                    Text(venue.name)
+                    .foregroundStyle(Theme.Palette.primaryText)
+                Label(night.currentVenue?.name ?? String(localized: "On the move"), systemImage: "mappin")
+                    .labelStyle(CompactLabelStyle())
+                    .font(Theme.Typography.caption)
+                    .foregroundStyle(Theme.Palette.secondaryText)
+                    .lineLimit(1)
+            }
+            Spacer(minLength: 0)
+            VStack(alignment: .trailing, spacing: 0) {
+                Text(night.beerCount, format: .number)
+                    .font(Theme.Typography.heroCount)
+                    .foregroundStyle(Theme.Gradients.accent)
+                    .contentTransition(.numericText())
+                    .animation(.default, value: night.beerCount)
+                Text("Beers")
+                    .textCase(.uppercase)
+                    .font(Theme.Typography.statLabel)
+                    .tracking(Theme.Typography.labelTracking)
+                    .foregroundStyle(Theme.Palette.secondaryText)
+            }
+        }
+        .floatingPanel()
+    }
+
+    private var beerPanel: some View {
+        VStack(spacing: Theme.Spacing.medium) {
+            Button {
+                engine.logBeer()
+            } label: {
+                Label("+1 Beer", systemImage: "mug.fill")
+            }
+            .buttonStyle(.primary(height: Theme.Size.beerButtonHeight))
+            .sensoryFeedback(.success, trigger: night.beerCount)
+
+            HStack {
+                if let last = night.sortedEntries.first {
+                    Button {
+                        editingEntry = last
+                    } label: {
+                        HStack(spacing: Theme.Spacing.xSmall) {
+                            Text("Last beer")
+                                .foregroundStyle(Theme.Palette.secondaryText)
+                            Text(last.timestamp, format: .dateTime.hour().minute())
+                                .monospacedDigit()
+                                .foregroundStyle(Theme.Palette.primaryText)
+                        }
+                        .font(Theme.Typography.caption)
+                    }
+                    .buttonStyle(.plain)
+                } else {
+                    Text("No beers yet")
                         .font(Theme.Typography.caption)
                         .foregroundStyle(Theme.Palette.secondaryText)
                 }
+                Spacer()
+                Button {
+                    showsTimeline = true
+                } label: {
+                    Label("Timeline", systemImage: "list.bullet")
+                }
+                .buttonStyle(.secondary)
             }
-            Spacer()
-            Text("🍺 \(night.beerCount)")
-                .font(Theme.Typography.heroCount)
-                .contentTransition(.numericText())
-                .animation(.default, value: night.beerCount)
         }
-        .padding(.horizontal, Theme.Spacing.large)
+        .floatingPanel()
+    }
+}
+
+/// Every entry of the live night, editable like in the report.
+private struct TimelineSheet: View {
+    let night: Night
+    @Environment(\.dismiss) private var dismiss
+    @State private var editingEntry: Entry?
+
+    var body: some View {
+        NavigationStack {
+            List {
+                EntryTimelineSection(night: night, editingEntry: $editingEntry)
+            }
+            .cardList()
+            .navigationTitle("Timeline")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                Button("Done") { dismiss() }
+            }
+        }
+        .entryTimeEditor($editingEntry)
+        .presentationDetents([.medium, .large])
+        .presentationBackground(Theme.Palette.background)
     }
 }

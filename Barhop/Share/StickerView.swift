@@ -9,50 +9,29 @@ struct StickerView: View {
         VStack(alignment: .leading, spacing: Theme.Spacing.medium) {
             VStack(alignment: .leading, spacing: 0) {
                 Text("Barhop")
+                    .textCase(.uppercase)
                     .font(Theme.Typography.shareWordmark)
+                    .tracking(Theme.Typography.wordmarkTracking)
                 Text(content.title)
                     .font(Theme.Typography.shareTitle)
             }
             if content.drawsMap {
-                StickerTrail(content: content)
-                    .frame(width: Theme.Size.stickerTrail.width, height: Theme.Size.stickerTrail.height)
+                TrailSketch(
+                    segments: content.segments,
+                    venues: content.venues,
+                    color: Theme.Palette.stickerText,
+                    gapColor: Theme.Palette.stickerText,
+                    stroke: Theme.Stroke.shareTrail,
+                    gapStroke: Theme.Stroke.shareTrailGap,
+                    pinSize: Theme.Size.stickerPin
+                )
+                .frame(width: Theme.Size.stickerTrail.width, height: Theme.Size.stickerTrail.height)
             }
-            ShareStatsGrid(content: content, valueFont: Theme.Typography.stickerStatValue)
+            ShareStatsGrid(content: content, valueFont: Theme.Typography.stickerStatValue, labelColor: Theme.Palette.stickerText)
         }
-        .foregroundStyle(Theme.Palette.shareText)
+        .foregroundStyle(Theme.Palette.stickerText)
         .shadow(color: Theme.Palette.stickerShadow, radius: Theme.Size.stickerShadowRadius)
         .padding(Theme.Spacing.medium)
         .frame(width: Theme.Size.stickerWidth, alignment: .leading)
-    }
-}
-
-private struct StickerTrail: View {
-    let content: ShareContent
-
-    var body: some View {
-        Canvas { context, size in
-            let projection = TrailProjection(
-                fitting: content.segments.flatMap { $0 } + content.venues,
-                in: size,
-                inset: Theme.Size.stickerPin
-            )
-            let segments = content.segments.map { $0.map(projection.point(for:)) }
-            context.stroke(path(TrailGeometry.gaps(between: segments)), with: .color(Theme.Palette.shareText), style: Theme.Stroke.shareTrailGap)
-            context.stroke(path(segments), with: .color(Theme.Palette.shareText), style: Theme.Stroke.shareTrail)
-            let diameter = Theme.Size.stickerPin
-            for venue in content.venues {
-                let center = projection.point(for: venue)
-                let rect = CGRect(x: center.x - diameter / 2, y: center.y - diameter / 2, width: diameter, height: diameter)
-                context.fill(Path(ellipseIn: rect), with: .color(Theme.Palette.shareText))
-            }
-        }
-    }
-
-    private func path(_ lines: [[CGPoint]]) -> Path {
-        Path { path in
-            for line in lines where line.count > 1 {
-                path.addLines(line)
-            }
-        }
     }
 }

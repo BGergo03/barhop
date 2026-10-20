@@ -6,9 +6,9 @@ import UIKit
 
 struct ShareContentTests {
     static func content(venues: Int = 2, showsMap: Bool = true, withRoute: Bool = true) -> ShareContent {
-        let origin = ShareContent.Coordinate(latitude: 47.4970, longitude: 19.0600)
-        let east = ShareContent.Coordinate(latitude: 47.4970, longitude: 19.0700)
-        let north = ShareContent.Coordinate(latitude: 47.5000, longitude: 19.0700)
+        let origin = MapPoint(latitude: 47.4970, longitude: 19.0600)
+        let east = MapPoint(latitude: 47.4970, longitude: 19.0700)
+        let north = MapPoint(latitude: 47.5000, longitude: 19.0700)
         return ShareContent(
             startedAt: Date(timeIntervalSince1970: 1_000_000),
             title: "Sat 24 Oct",
@@ -61,8 +61,8 @@ struct TrailProjectionTests {
     let size = CGSize(width: 200, height: 100)
 
     @Test func fitsInsideInsetKeepingNorthUp() {
-        let south = ShareContent.Coordinate(latitude: 47.49, longitude: 19.06)
-        let north = ShareContent.Coordinate(latitude: 47.50, longitude: 19.06)
+        let south = MapPoint(latitude: 47.49, longitude: 19.06)
+        let north = MapPoint(latitude: 47.50, longitude: 19.06)
         let projection = TrailProjection(fitting: [south, north], in: size, inset: 10)
         let top = projection.point(for: north)
         let bottom = projection.point(for: south)
@@ -73,8 +73,8 @@ struct TrailProjectionTests {
 
     @Test func keepsProportions() {
         // ~750 m east-west and ~750 m north-south should come out square, limited by the height.
-        let a = ShareContent.Coordinate(latitude: 47.5, longitude: 19.06)
-        let b = ShareContent.Coordinate(latitude: 47.5 + 750 / 111_000.0, longitude: 19.06 + 750 / (111_000 * cos(47.5 * .pi / 180)))
+        let a = MapPoint(latitude: 47.5, longitude: 19.06)
+        let b = MapPoint(latitude: 47.5 + 750 / 111_000.0, longitude: 19.06 + 750 / (111_000 * cos(47.5 * .pi / 180)))
         let projection = TrailProjection(fitting: [a, b], in: size, inset: 0)
         let pa = projection.point(for: a)
         let pb = projection.point(for: b)
@@ -83,7 +83,7 @@ struct TrailProjectionTests {
     }
 
     @Test func singlePointSitsInTheMiddle() {
-        let only = ShareContent.Coordinate(latitude: 47.5, longitude: 19.06)
+        let only = MapPoint(latitude: 47.5, longitude: 19.06)
         #expect(TrailProjection(fitting: [only], in: size, inset: 10).point(for: only) == CGPoint(x: 100, y: 50))
     }
 }

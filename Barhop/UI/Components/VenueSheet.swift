@@ -12,11 +12,11 @@ struct VenueSheet: View {
     var body: some View {
         NavigationStack {
             List {
-                Section("Nearby places") {
+                Section {
                     if let candidates {
                         if candidates.isEmpty {
-                            Text("No places found nearby")
-                                .foregroundStyle(Theme.Palette.secondaryText)
+                            EmptyStateRow(systemImage: "mappin.slash", message: "No places found nearby")
+                                .cardRow()
                         }
                         ForEach(candidates) { candidate in
                             Button {
@@ -25,18 +25,25 @@ struct VenueSheet: View {
                                 CandidateRow(candidate: candidate, isCurrent: candidate.name == venue.name)
                             }
                             .tint(Theme.Palette.primaryText)
+                            .cardRow()
                         }
                     } else {
                         ProgressView()
+                            .frame(maxWidth: .infinity)
+                            .cardRow()
                     }
+                } header: {
+                    SectionLabel("Nearby places")
                 }
                 Section {
-                    Button("Custom name…") {
+                    Button("Custom name…", systemImage: "pencil") {
                         customName = venue.name
                         editsCustomName = true
                     }
+                    .cardRow()
                 }
             }
+            .cardList()
             .navigationTitle(venue.name)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -55,6 +62,7 @@ struct VenueSheet: View {
             }
         }
         .presentationDetents([.medium, .large])
+        .presentationBackground(Theme.Palette.background)
     }
 
     private func rename(to name: String) {

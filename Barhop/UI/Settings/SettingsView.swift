@@ -17,19 +17,23 @@ struct SettingsView: View {
                             Text("\(hours) hours").tag(hours)
                         }
                     }
+                    .cardRow()
                 } footer: {
                     Text("If you haven't logged anything for this long, Barhop asks whether you're still out.")
                 }
                 #if DEBUG
                 Section {
                     Toggle("Treat hours as minutes", isOn: $autoCloseDebugMinutes)
+                        .cardRow()
                 } header: {
-                    Text("Debug")
+                    SectionLabel("Debug")
                 } footer: {
                     Text("Also shortens the 30 minute grace period to 30 seconds.")
                 }
                 #endif
             }
+            .scrollContentBackground(.hidden)
+            .screenBackground()
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -40,5 +44,6 @@ struct SettingsView: View {
             .onChange(of: autoCloseDebugMinutes) { engine.rescheduleStillOutReminder() }
             #endif
         }
+        .presentationBackground(Theme.Palette.background)
     }
 }

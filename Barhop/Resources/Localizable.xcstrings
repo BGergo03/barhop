@@ -1,10 +1,10 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%@ +%lld more" : {
+    "—" : {
 
     },
-    "%@ per hour" : {
+    "%@ +%lld more" : {
 
     },
     "%lld hours" : {
@@ -35,31 +35,25 @@
     "+1 Beer" : {
 
     },
-    "🍺 %lld" : {
-
-    },
-    "🍺 Beer" : {
-
-    },
-    "📍 %lld" : {
-
-    },
-    "—" : {
-
-    },
     "Adds a beer to your night, starting a night if none is active." : {
-
-    },
-    "Also shortens the 30 minute grace period to 30 seconds." : {
 
     },
     "Auto-close after" : {
 
     },
+    "Auto-closed" : {
+
+    },
     "Barhop" : {
 
     },
+    "Beer" : {
+
+    },
     "Beers" : {
+
+    },
+    "Beers per hour" : {
 
     },
     "Cancel" : {
@@ -75,9 +69,6 @@
 
     },
     "Custom name…" : {
-
-    },
-    "Debug" : {
 
     },
     "Delete" : {
@@ -116,6 +107,9 @@
     "Its beers, route and places will be removed." : {
 
     },
+    "Last beer" : {
+
+    },
     "Liters" : {
 
     },
@@ -134,16 +128,19 @@
     "Nearby places" : {
 
     },
+    "Night in progress" : {
+
+    },
     "No beers yet" : {
 
     },
     "No places found nearby" : {
 
     },
-    "Open Barhop to log beers." : {
+    "On the move" : {
 
     },
-    "Pace" : {
+    "Open Barhop to log beers." : {
 
     },
     "Past nights" : {
@@ -152,7 +149,10 @@
     "Places" : {
 
     },
-    "Resume night" : {
+    "Ready when you are" : {
+
+    },
+    "Resume" : {
 
     },
     "Save" : {
@@ -164,7 +164,13 @@
     "Share" : {
 
     },
+    "Share your night" : {
+
+    },
     "Show map on share" : {
+
+    },
+    "Start a night to map your route and count your beers." : {
 
     },
     "Start night" : {
@@ -189,9 +195,6 @@
 
     },
     "Timeline" : {
-
-    },
-    "Treat hours as minutes" : {
 
     },
     "Undo last beer" : {

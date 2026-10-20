@@ -52,7 +52,7 @@ enum MapSnapshot {
         }
     }
 
-    private static func region(fitting coordinates: [ShareContent.Coordinate]) -> MKCoordinateRegion {
+    private static func region(fitting coordinates: [MapPoint]) -> MKCoordinateRegion {
         let latitudes = coordinates.map(\.latitude)
         let longitudes = coordinates.map(\.longitude)
         let minLat = latitudes.min()!, maxLat = latitudes.max()!
@@ -81,6 +81,6 @@ enum MapSnapshot {
     }
 }
 
-extension ShareContent.Coordinate {
+extension MapPoint {
     var clCoordinate: CLLocationCoordinate2D { CLLocationCoordinate2D(latitude: latitude, longitude: longitude) }
 }

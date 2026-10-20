@@ -9,10 +9,10 @@ struct EntryTimelineSection: View {
     @Environment(NightEngine.self) private var engine
 
     var body: some View {
-        Section("Timeline") {
+        Section {
             if night.entries.isEmpty {
-                Text("No beers yet")
-                    .foregroundStyle(Theme.Palette.secondaryText)
+                EmptyStateRow(systemImage: "mug", message: "No beers yet")
+                    .cardRow()
             }
             ForEach(night.sortedEntries) { entry in
                 Button {
@@ -21,12 +21,15 @@ struct EntryTimelineSection: View {
                     EntryRow(entry: entry)
                 }
                 .tint(Theme.Palette.primaryText)
+                .cardRow()
                 .swipeActions {
                     Button("Delete", role: .destructive) {
                         engine.deleteEntry(entry)
                     }
                 }
             }
+        } header: {
+            SectionLabel("Timeline")
         }
     }
 }
@@ -45,15 +48,19 @@ private struct EntryRow: View {
     let entry: Entry
 
     var body: some View {
-        HStack {
+        HStack(spacing: Theme.Spacing.medium) {
             Text(entry.timestamp, format: .dateTime.hour().minute())
-                .font(Theme.Typography.body.monospacedDigit())
-            Text("🍺 Beer")
+                .font(Theme.Typography.headline.monospacedDigit())
+                .foregroundStyle(Theme.Palette.accent)
+            Label("Beer", systemImage: "mug.fill")
+                .labelStyle(CompactLabelStyle())
+                .font(Theme.Typography.body)
             Spacer()
             if let venue = entry.venue {
                 Text(venue.name)
                     .font(Theme.Typography.caption)
                     .foregroundStyle(Theme.Palette.secondaryText)
+                    .lineLimit(1)
             }
         }
     }
@@ -76,7 +83,10 @@ private struct EditEntryTimeSheet: View {
         NavigationStack {
             Form {
                 DatePicker("Time", selection: $time, in: range, displayedComponents: [.date, .hourAndMinute])
+                    .cardRow()
             }
+            .scrollContentBackground(.hidden)
+            .screenBackground()
             .navigationTitle("Edit time")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -92,5 +102,6 @@ private struct EditEntryTimeSheet: View {
             }
         }
         .presentationDetents([.medium])
+        .presentationBackground(Theme.Palette.background)
     }
 }

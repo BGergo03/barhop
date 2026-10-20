@@ -35,9 +35,7 @@ struct TrailMap: View {
                     Button {
                         selectedVenue = venue
                     } label: {
-                        Image(systemName: "mappin.circle.fill")
-                            .font(Theme.Typography.venuePin)
-                            .foregroundStyle(Theme.Palette.onAccent, Theme.Palette.venuePin)
+                        VenuePin()
                     }
                 }
             }
@@ -45,11 +43,24 @@ struct TrailMap: View {
                 UserAnnotation()
             }
         }
-        .mapStyle(.standard(pointsOfInterest: .excludingAll))
+        .mapStyle(.standard(emphasis: .muted, pointsOfInterest: .excludingAll))
         .mapControls {
             if isLive { MapUserLocationButton() }
             MapCompass()
         }
+    }
+}
+
+/// An amber disc with a mug, ringed so it reads on any map.
+private struct VenuePin: View {
+    var body: some View {
+        Image(systemName: "mug.fill")
+            .font(Theme.Typography.venuePin)
+            .foregroundStyle(Theme.Palette.onAccent)
+            .frame(width: Theme.Size.venuePin, height: Theme.Size.venuePin)
+            .background(Theme.Gradients.accent, in: .circle)
+            .overlay(Circle().strokeBorder(Theme.Palette.venuePinRing, lineWidth: Theme.Size.venuePinRing))
+            .shadow(color: Theme.Palette.glow, radius: Theme.Spacing.small)
     }
 }
 
@@ -62,8 +73,11 @@ struct LocationOffPrompt: View {
             if let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
         } label: {
             Label("Location is off. Turn it on in Settings to map your night.", systemImage: "location.slash")
+                .labelStyle(CompactLabelStyle())
                 .font(Theme.Typography.caption)
                 .foregroundStyle(Theme.Palette.secondaryText)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .buttonStyle(.plain)
     }
 }
