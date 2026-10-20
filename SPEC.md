@@ -35,7 +35,7 @@ This spec is the outcome of a design interview. Every decision below is settled 
 
 ## 2. Platform & tooling
 
-- Swift, SwiftUI, **iOS 26.0+** (raised from 18.0 in M10 for the native floating tab bar), iPhone only, portrait only.
+- Swift, SwiftUI, **iOS 26.1+** (raised from 18.0 in M10 for the native floating tab bar; 26.1 is the first that can hide the tab bar accessory when no night is active), iPhone only, portrait only.
 - SwiftData for persistence (local only).
 - ActivityKit + WidgetKit + App Intents for Live Activity and Control Center control.
 - Core Location (`CLLocationUpdate.liveUpdates`, `CLBackgroundActivitySession`) + MapKit.
@@ -366,7 +366,7 @@ Each milestone should build, run, and meet its acceptance check before the next.
 ### Places (after M9)
 
 10. **Tab shell**
-    iOS 26 deployment target, `TabView` with Home · Search · Map · Profile (Search and Map as placeholders), Live night as a full-screen cover, night pill in `.tabViewBottomAccessory`, Settings moved to Profile, nights list moved to Profile.
+    iOS 26.1 deployment target, `TabView` with Home · Search · Map · Profile (Search and Map as placeholders), Live night as a full-screen cover, night pill in `.tabViewBottomAccessory`, Settings moved to Profile, nights list moved to Profile.
     ✅ Start a night from Home: Live night opens over the tabs; dismiss it: the pill shows the timer and count, its +1 logs a beer, tapping it reopens Live night; end the night: the Report opens and the pill is gone.
 11. **Places**
     `Place` model and `Venue.place`, stop → place linking, venue sheet links on POI pick, one-time backfill of past nights, "Open place" links from Live night and Report (to a minimal Place detail).

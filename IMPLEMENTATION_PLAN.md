@@ -21,7 +21,7 @@ Derived from [SPEC.md](SPEC.md). The spec is the source of truth for *what*; thi
 ```
 Barhop.xcodeproj
 Barhop/
-  App/            BarhopApp.swift, AppModel (routing: Home vs Live night), RootView (tabs from M10)
+  App/            BarhopApp.swift, AppRouter (tabs, paths, Live night cover), RootView
   Models/         Night, Entry, Venue, TrailPoint, Place, MenuItem, PriceObservation, enums, payloads, ModelContainer factory
   Engine/         NightEngine, AutoClose, Recovery
   Places/         PlaceStore, PlaceLinker, PlaceBackfill, NearbyPlaces (from M11)
@@ -187,10 +187,10 @@ Simulator/        BudapestCrawl.gpx
 ---
 
 ### M10 — Tab shell
-- Raise `IPHONEOS_DEPLOYMENT_TARGET` to 26.0 on all targets (see risks first). Drop any `#available(iOS 18…)` / pre-26 branches that become dead.
+- Raise `IPHONEOS_DEPLOYMENT_TARGET` to 26.1 on all targets (see risks first); 26.1 brings `tabViewBottomAccessory(isEnabled:)`, which the pill needs to hide between nights. Drop any `#available(iOS 18…)` / pre-26 branches that become dead.
 - `RootView`: `TabView` with `Tab` for Home · Search · Map · Profile (plain tabs, no `role: .search`), each with its own `NavigationStack` and `Route` path. Search and Map are placeholders for now.
 - Live night moves from a pushed route to `.fullScreenCover(item:)` driven by the active night; the existing `onChange` routing keeps auto-opening it and presents the Report (pushed on the Home stack) when the night ends.
-- `NightPill` in `.tabViewBottomAccessory`, shown only while a night is active: `Text(startedAt, style: .timer)`, 🍺 count, +1 → `engine.logBeer(source: .app)`; tap → reopen the cover.
+- `NightPill` in `.tabViewBottomAccessory(isEnabled:)`, shown only while a night is active: `Text(startedAt, style: .timer)`, 🍺 count, +1 → `engine.logBeer(source: .app)`; tap → reopen the cover.
 - Profile: nights list (moved from Home, with swipe-to-delete) and a Settings row (the Home gear goes away). Home keeps Start/Resume and shows the last 3 nights.
 - Tint the tab bar and pill with the `Theme` accent.
 ✅ **Acceptance** (SPEC M10).
@@ -257,6 +257,6 @@ Simulator/        BudapestCrawl.gpx
 | Background location stops when app is killed by user | M2/M7 | Accepted; recovery on next launch starts a new segment. |
 | POI search returns poor names in Budapest | M3 | Address fallback + manual fix-up sheet. |
 | Visual direction (SPEC §10) | all | Decided after M8: "Amber night". Everything still routes through `Theme.swift`. |
-| Your iPhone isn't on iOS 26 | M10 | Check before raising the deployment target; if it isn't, stay on 18.0 with a plain `TabView` and a custom pill overlay instead of `.tabViewBottomAccessory`. |
+| Your iPhone isn't on iOS 26.1+ | M10 | Checked: it's on iOS 27.0.1. Otherwise: if it isn't, stay on 18.0 with a plain `TabView` and a custom pill overlay instead of `.tabViewBottomAccessory`. |
 | `MKMapItem.identifier` is nil for some POIs | M11 | Fallback match: same name within 75 m (SPEC §6). |
 | MapKit throttles search requests (roughly 50 per minute per app) | M11, M13, M14 | Debounce map pans and search typing (~0.5 s); the backfill runs serially with a pause between lookups and resumes where it left off. |
