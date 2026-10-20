@@ -124,7 +124,7 @@ Simulator/        BudapestCrawl.gpx
   - beers; liters = Σ `volumeMl` / 1000 (= beers × 0.5 today, but computed from payload)
   - pace = beers / duration-hours (show "—" when duration < 1 min)
   - longest gap between consecutive beers ("—" with < 2 beers)
-  - distance = Σ point-to-point distance **within** segments only
+  - distance = Σ point-to-point distance **within** segments only, with fixes taken during a venue stay and within 75 m of it snapped to the venue center (so drift while sitting in a bar adds nothing, the walk in/out still counts)
   - venues ordered by `arrivedAt`, each with time spent (`leftAt ?? endedAt` − `arrivedAt`)
 - Report screen: stats, `TrailMap` with pins (tap → rename), editable timeline (stats recompute via `@Query`), "Show map on share" toggle bound to `night.showMapOnShare`, Share menu placeholder.
 - Zero-beer and no-location nights render without crashes or empty-looking holes.

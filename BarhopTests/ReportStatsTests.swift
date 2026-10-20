@@ -41,9 +41,49 @@ struct ReportStatsTests {
         #expect(stats(minutes: 60, drinks: [beer(0), small]).liters == 0.83)
     }
 
+    @Test func driftInsideAVenueIsNotWalking() {
+        // Walk 100 m north, sit 30 min with fixes jittering 20 m, walk 100 m on.
+        let fixes = [
+            testFix(0), testFix(60, north: 100),
+            testFix(360, north: 120), testFix(660, north: 100), testFix(960, north: 120), testFix(1860, north: 100),
+            testFix(1920, north: 200),
+        ]
+        let bar = testFix(0, north: 110)
+        let stay = ReportStats.Stay(
+            id: UUID(), name: "Bar", latitude: bar.latitude, longitude: bar.longitude,
+            arrivedAt: fixes[1].timestamp, leftAt: fixes[5].timestamp
+        )
+        let report = ReportStats(
+            startedAt: fixes[0].timestamp,
+            endedAt: fixes[6].timestamp,
+            drinks: [],
+            segments: [fixes],
+            stays: [stay]
+        )
+        #expect(abs(report.distance - 200) < 1)
+    }
+
+    @Test func openVenueLeftBehindDoesNotSwallowTheWalk() {
+        // A beer logged while passing through opens a venue that never closes:
+        // fixes beyond its radius are still walking.
+        let fixes = [testFix(0), testFix(60, north: 100), testFix(120, north: 200), testFix(180, north: 300)]
+        let stay = ReportStats.Stay(
+            id: UUID(), name: "Corner", latitude: fixes[0].latitude, longitude: fixes[0].longitude,
+            arrivedAt: fixes[0].timestamp, leftAt: nil
+        )
+        let report = ReportStats(
+            startedAt: fixes[0].timestamp,
+            endedAt: fixes[3].timestamp,
+            drinks: [],
+            segments: [fixes],
+            stays: [stay]
+        )
+        #expect(abs(report.distance - 300) < 1)
+    }
+
     @Test func venuesOrderedWithOpenOneCountingToEnd() {
-        let late = ReportStats.Stay(id: UUID(), name: "B", arrivedAt: start.addingTimeInterval(3600), leftAt: nil)
-        let early = ReportStats.Stay(id: UUID(), name: "A", arrivedAt: start, leftAt: start.addingTimeInterval(1800))
+        let late = ReportStats.Stay(id: UUID(), name: "B", latitude: 47.5, longitude: 19.06, arrivedAt: start.addingTimeInterval(3600), leftAt: nil)
+        let early = ReportStats.Stay(id: UUID(), name: "A", latitude: 47.5, longitude: 19.06, arrivedAt: start, leftAt: start.addingTimeInterval(1800))
         let report = stats(minutes: 90, stays: [late, early])
         #expect(report.venues.map(\.name) == ["A", "B"])
         #expect(report.venues.map(\.timeSpent) == [1800, 1800])
@@ -90,9 +130,11 @@ struct CrawlReportTests {
         // 19:35 → 20:20
         #expect(abs(try #require(stats.longestGap) - 45 * 60) < 0.001)
 
-        // Walking legs in the GPX: 234 m + 300 m + 294 m = 828 m. Per SPEC the distance sums the
-        // whole trail, so the 5-minute fixes jittering inside each bar add ~110 m on top (941 m).
-        #expect((828...1_000).contains(stats.distance), "distance \(stats.distance)")
+        // Drift inside the bars doesn't count, so the distance lies between the straight lines from
+        // bar to bar (223 m + 263 m + 281 m = 767 m) and the GPX walking legs (234 m + 300 m + 294 m
+        // = 828 m): the filter keeps a fix every 50 m, which cuts corners. A few meters of slack
+        // because venue centers are centroids, not the exact bar coordinates.
+        #expect((757...828).contains(stats.distance), "distance \(stats.distance)")
 
         // Stays from the GPX dwells; the last one runs until the night ends.
         let expected: [(arrived: String, minutes: Double)] = [

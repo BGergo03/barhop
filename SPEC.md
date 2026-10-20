@@ -149,7 +149,7 @@ Rules:
 ### Trail
 - Use `CLLocationUpdate.liveUpdates()` inside a long-lived task while a night is active, and hold a `CLBackgroundActivitySession` for the night's duration (keeps updates flowing in background with only When-In-Use permission; shows the blue location indicator).
 - **Reduced fidelity on purpose (battery)**: only record a point if it is ≥ 50 m from the last recorded point **or** ≥ 5 min since the last one; drop fixes with `horizontalAccuracy > 100 m`.
-- A gap of > 10 min with no updates, or a recovery restart, starts a new `segment`. Gaps are drawn **dashed** between segments and **excluded** from walked distance.
+- A gap of > 10 min with no updates, or a recovery restart, starts a new `segment`. Gaps are drawn **dashed** between segments and **excluded** from walked distance. GPS drift while at a venue is excluded too: a fix taken during a stay and within the 75 m venue radius counts as being at the venue's center.
 
 ### Entry location
 - When logging, take a **fresh precise fix** (one-shot, up to ~5 s timeout); fall back to the latest trail point if it times out.

@@ -12,6 +12,8 @@ struct ReportStats: Equatable {
     struct Stay: Equatable {
         var id: UUID
         var name: String
+        var latitude: Double
+        var longitude: Double
         var arrivedAt: Date
         /// `nil` while still there; counts until the end of the night.
         var leftAt: Date?
@@ -34,7 +36,7 @@ struct ReportStats: Equatable {
     var pace: Double?
     /// Longest time between consecutive beers, `nil` with fewer than two.
     var longestGap: TimeInterval?
-    /// Meters walked within segments; tracking gaps don't count.
+    /// Meters walked within segments. Tracking gaps and drift while at a venue don't count.
     var distance: CLLocationDistance
     /// Ordered by arrival.
     var venues: [VenueTime]
@@ -43,7 +45,7 @@ struct ReportStats: Equatable {
         startedAt: Date,
         endedAt: Date,
         drinks: [Drink],
-        segments: [[CLLocationCoordinate2D]],
+        segments: [[LocationFix]],
         stays: [Stay]
     ) {
         duration = max(0, endedAt.timeIntervalSince(startedAt))
@@ -57,7 +59,16 @@ struct ReportStats: Equatable {
         pace = duration < Self.minimumPaceDuration ? nil : Double(beers) / (duration / 3600)
         longestGap = zip(beerTimes, beerTimes.dropFirst()).map { $1.timeIntervalSince($0) }.max()
 
-        distance = TrailGeometry.walkedDistance(segments: segments)
+        distance = TrailGeometry.walkedDistance(
+            segments: segments,
+            stays: stays.map {
+                TrailGeometry.Stay(
+                    during: $0.arrivedAt...max($0.arrivedAt, $0.leftAt ?? endedAt),
+                    latitude: $0.latitude,
+                    longitude: $0.longitude
+                )
+            }
+        )
 
         venues = stays
             .sorted { $0.arrivedAt < $1.arrivedAt }
@@ -81,9 +92,16 @@ extension ReportStats {
             drinks: night.entries.compactMap { entry in
                 entry.drink.map { Drink(timestamp: entry.timestamp, payload: $0) }
             },
-            segments: TrailGeometry.segments(night.trailPoints),
+            segments: TrailGeometry.segmentFixes(night.trailPoints),
             stays: night.venues.map {
-                Stay(id: $0.id, name: $0.name, arrivedAt: $0.arrivedAt, leftAt: $0.leftAt)
+                Stay(
+                    id: $0.id,
+                    name: $0.name,
+                    latitude: $0.latitude,
+                    longitude: $0.longitude,
+                    arrivedAt: $0.arrivedAt,
+                    leftAt: $0.leftAt
+                )
             }
         )
     }
