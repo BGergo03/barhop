@@ -14,9 +14,13 @@ struct SampleDataTests {
     @Test func addsEndedNightsLinkedToPlacesAndRemovesOnlyThem() throws {
         let engine = makeEngine()
         let context = container.mainContext
+        // The test host shares the app's defaults, which may remember a real seeding.
+        let defaults = UserDefaults.standard
+        let seeded = defaults.object(forKey: AppSettings.sampleDataIDsKey)
+        defaults.removeObject(forKey: AppSettings.sampleDataIDsKey)
+        defer { defaults.set(seeded, forKey: AppSettings.sampleDataIDsKey) }
         let real = engine.startNight(at: testFix(0).timestamp)
         engine.endNight(real, at: testFix(3600).timestamp)
-        defer { engine.removeSampleData() }
 
         engine.addSampleData()
 
