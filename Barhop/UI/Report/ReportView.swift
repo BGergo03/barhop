@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 /// An ended night: stats, map, venues and the editable timeline (SPEC §7).
 /// Stats are recomputed from the night on every render, so timeline edits show up immediately.
@@ -7,6 +8,7 @@ struct ReportView: View {
     @Environment(NightEngine.self) private var engine
     @State private var selectedVenue: Venue?
     @State private var editingEntry: Entry?
+    @State private var copiedStickers = 0
 
     private var hasLocation: Bool { !night.trailPoints.isEmpty || !night.venues.isEmpty }
 
@@ -85,16 +87,32 @@ struct ReportView: View {
         }
     }
 
-    /// Export lands in M8; the menu is here so the layout is final.
+    /// Card and sticker render only when chosen, from the night as it is at that moment.
     private var shareMenu: some View {
-        Menu {
-            Button("Card (PNG)") {}
-            Button("Sticker (PNG)") {}
-            Button("Copy sticker") {}
+        let content = ShareContent(night: night)
+        return Menu {
+            ShareLink(item: ShareImage(kind: .card, content: content), preview: SharePreview(night.title)) {
+                Label("Card (PNG)", systemImage: "rectangle.portrait")
+            }
+            ShareLink(item: ShareImage(kind: .sticker, content: content), preview: SharePreview(night.title)) {
+                Label("Sticker (PNG)", systemImage: "seal")
+            }
+            Button("Copy sticker", systemImage: "doc.on.doc") {
+                copySticker(content)
+            }
         } label: {
             Label("Share", systemImage: "square.and.arrow.up")
         }
-        .disabled(true)
+        .sensoryFeedback(.success, trigger: copiedStickers)
+    }
+
+    /// For pasting straight into an Instagram story.
+    private func copySticker(_ content: ShareContent) {
+        Task {
+            guard let png = try? await ShareRenderer.png(.sticker, for: content) else { return }
+            UIPasteboard.general.setData(png, forPasteboardType: UTType.png.identifier)
+            copiedStickers += 1
+        }
     }
 }
 
