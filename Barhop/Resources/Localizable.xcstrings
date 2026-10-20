@@ -1,6 +1,15 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Add sample data" : {
+
+    },
+    "Five made-up nights around Kazinczy utca, with their places and prices. Removing them leaves your own nights alone." : {
+
+    },
+    "Remove sample data" : {
+
+    },
     "—" : {
 
     },
@@ -35,7 +44,13 @@
         }
       }
     },
+    "+1" : {
+
+    },
     "+1 Beer" : {
+
+    },
+    "A map of your places is coming soon." : {
 
     },
     "Adds a beer to your night, starting a night if none is active." : {
@@ -63,6 +78,9 @@
 
     },
     "Card (PNG)" : {
+
+    },
+    "Close" : {
 
     },
     "Copy sticker" : {
@@ -104,7 +122,13 @@
     "Entry ID" : {
 
     },
+    "Home" : {
+
+    },
     "If you haven't logged anything for this long, Barhop asks whether you're still out." : {
+
+    },
+    "Its beers and route will be removed. The places you visited stay." : {
 
     },
     "Last beer" : {
@@ -122,6 +146,9 @@
     "Longest gap" : {
 
     },
+    "Map" : {
+
+    },
     "Name" : {
 
     },
@@ -129,6 +156,9 @@
 
     },
     "Night in progress" : {
+
+    },
+    "Nights" : {
 
     },
     "No beers yet" : {
@@ -143,16 +173,40 @@
     "Open Barhop to log beers." : {
 
     },
+    "Open night" : {
+
+    },
+    "Open place" : {
+
+    },
     "Places" : {
 
     },
+    "Profile" : {
+
+    },
     "Ready when you are" : {
+
+    },
+    "Recent nights" : {
+
+    },
+    "Rename" : {
 
     },
     "Resume" : {
 
     },
     "Save" : {
+
+    },
+    "Search" : {
+
+    },
+    "Searching places and drinks is coming soon." : {
+
+    },
+    "See all" : {
 
     },
     "Settings" : {
@@ -200,64 +254,10 @@
     "Your nights will show up here." : {
 
     },
-    "Recent nights" : {
-
-    },
-    "See all" : {
-
-    },
-    "+1" : {
-
-    },
-    "Close" : {
-
-    },
-    "Profile" : {
-
-    },
-    "Home" : {
-
-    },
-    "Search" : {
-
-    },
-    "Map" : {
-
-    },
-    "Nights" : {
-
-    },
-    "Open night" : {
-
-    },
-    "Searching places and drinks is coming soon." : {
-
-    },
-    "A map of your places is coming soon." : {
-
-    },
-    "Open place" : {
-
-    },
-    "Rename" : {
-
-    },
     "Your visits" : {
 
     },
     "Your visits will show up here." : {
-
-    },
-    "Its beers and route will be removed. The places you visited stay." : {
-
-    },
-    "Add sample data" : {
-
-    },
-    "Remove sample data" : {
-
-    },
-    "Five made-up nights around Kazinczy utca, with their places and prices. Removing them leaves your own nights alone." : {
 
     }
   },
