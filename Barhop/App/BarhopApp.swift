@@ -25,7 +25,9 @@ struct BarhopApp: App {
         .modelContainer(ModelContainerFactory.shared)
         .onChange(of: scenePhase) { _, phase in
             switch phase {
-            case .active: NightEngine.shared.resumeTrackingIfNeeded()
+            case .active:
+                NightEngine.shared.resumeTrackingIfNeeded()
+                NightEngine.shared.backfillPlacesIfNeeded()
             case .background: NightEngine.shared.flush()
             default: break
             }
