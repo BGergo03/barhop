@@ -1,0 +1,542 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0D0000000000000000000060 /* BarhopWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0D0000000000000000000021 /* BarhopWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0D0000000000000000000070 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D0000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D0000000000000000000041;
+			remoteInfo = BarhopWidgets;
+		};
+		0D0000000000000000000071 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D0000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D0000000000000000000040;
+			remoteInfo = Barhop;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0D0000000000000000000053 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				0D0000000000000000000060 /* BarhopWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0D0000000000000000000020 /* Barhop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Barhop.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D0000000000000000000021 /* BarhopWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BarhopWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D0000000000000000000022 /* BarhopTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BarhopTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D0000000000000000000030 /* Barhop-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Barhop-Info.plist"; sourceTree = "<group>"; };
+		0D0000000000000000000031 /* Barhop.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Barhop.entitlements; sourceTree = "<group>"; };
+		0D0000000000000000000032 /* BarhopWidgets-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BarhopWidgets-Info.plist"; sourceTree = "<group>"; };
+		0D0000000000000000000033 /* BarhopWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BarhopWidgets.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		0D0000000000000000000010 /* Barhop */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Barhop;
+			sourceTree = "<group>";
+		};
+		0D0000000000000000000011 /* BarhopWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BarhopWidgets;
+			sourceTree = "<group>";
+		};
+		0D0000000000000000000012 /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		0D0000000000000000000013 /* BarhopTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BarhopTests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0D0000000000000000000051 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0D0000000000000000000055 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0D0000000000000000000058 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0D0000000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				0D0000000000000000000010 /* Barhop */,
+				0D0000000000000000000011 /* BarhopWidgets */,
+				0D0000000000000000000012 /* Shared */,
+				0D0000000000000000000013 /* BarhopTests */,
+				0D0000000000000000000004 /* Config */,
+				0D0000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0D0000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0D0000000000000000000020 /* Barhop.app */,
+				0D0000000000000000000021 /* BarhopWidgets.appex */,
+				0D0000000000000000000022 /* BarhopTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0D0000000000000000000004 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				0D0000000000000000000030 /* Barhop-Info.plist */,
+				0D0000000000000000000031 /* Barhop.entitlements */,
+				0D0000000000000000000032 /* BarhopWidgets-Info.plist */,
+				0D0000000000000000000033 /* BarhopWidgets.entitlements */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0D0000000000000000000040 /* Barhop */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0D0000000000000000000081 /* Build configuration list for PBXNativeTarget "Barhop" */;
+			buildPhases = (
+				0D0000000000000000000050 /* Sources */,
+				0D0000000000000000000051 /* Frameworks */,
+				0D0000000000000000000052 /* Resources */,
+				0D0000000000000000000053 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0D0000000000000000000072 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				0D0000000000000000000010 /* Barhop */,
+				0D0000000000000000000012 /* Shared */,
+			);
+			name = Barhop;
+			productName = Barhop;
+			productReference = 0D0000000000000000000020 /* Barhop.app */;
+			productType = "com.apple.product-type.application";
+		};
+		0D0000000000000000000041 /* BarhopWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0D0000000000000000000082 /* Build configuration list for PBXNativeTarget "BarhopWidgets" */;
+			buildPhases = (
+				0D0000000000000000000054 /* Sources */,
+				0D0000000000000000000055 /* Frameworks */,
+				0D0000000000000000000056 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				0D0000000000000000000011 /* BarhopWidgets */,
+				0D0000000000000000000012 /* Shared */,
+			);
+			name = BarhopWidgets;
+			productName = BarhopWidgets;
+			productReference = 0D0000000000000000000021 /* BarhopWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		0D0000000000000000000042 /* BarhopTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0D0000000000000000000083 /* Build configuration list for PBXNativeTarget "BarhopTests" */;
+			buildPhases = (
+				0D0000000000000000000057 /* Sources */,
+				0D0000000000000000000058 /* Frameworks */,
+				0D0000000000000000000059 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0D0000000000000000000073 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				0D0000000000000000000013 /* BarhopTests */,
+			);
+			name = BarhopTests;
+			productName = BarhopTests;
+			productReference = 0D0000000000000000000022 /* BarhopTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0D0000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					0D0000000000000000000040 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					0D0000000000000000000041 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					0D0000000000000000000042 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = 0D0000000000000000000040;
+					};
+				};
+			};
+			buildConfigurationList = 0D0000000000000000000080 /* Build configuration list for PBXProject "Barhop" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 0D0000000000000000000002;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 0D0000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0D0000000000000000000040 /* Barhop */,
+				0D0000000000000000000041 /* BarhopWidgets */,
+				0D0000000000000000000042 /* BarhopTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0D0000000000000000000052 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0D0000000000000000000056 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0D0000000000000000000059 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0D0000000000000000000050 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0D0000000000000000000054 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0D0000000000000000000057 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0D0000000000000000000072 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D0000000000000000000041 /* BarhopWidgets */;
+			targetProxy = 0D0000000000000000000070 /* PBXContainerItemProxy */;
+		};
+		0D0000000000000000000073 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D0000000000000000000040 /* Barhop */;
+			targetProxy = 0D0000000000000000000071 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0D0000000000000000000090 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = M9TY9PR9X7;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		0D0000000000000000000091 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = M9TY9PR9X7;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0D0000000000000000000092 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Config/Barhop.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/Barhop-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Barhop;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bgergo03.barhop;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		0D0000000000000000000093 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Config/Barhop.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/Barhop-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Barhop;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bgergo03.barhop;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		0D0000000000000000000094 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Config/BarhopWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/BarhopWidgets-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = BarhopWidgets;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bgergo03.barhop.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		0D0000000000000000000095 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Config/BarhopWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/BarhopWidgets-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = BarhopWidgets;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bgergo03.barhop.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		0D0000000000000000000096 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bgergo03.barhop.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Barhop.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Barhop";
+			};
+			name = Debug;
+		};
+		0D0000000000000000000097 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bgergo03.barhop.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Barhop.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Barhop";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0D0000000000000000000080 /* Build configuration list for PBXProject "Barhop" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D0000000000000000000090 /* Debug */,
+				0D0000000000000000000091 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0D0000000000000000000081 /* Build configuration list for PBXNativeTarget "Barhop" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D0000000000000000000092 /* Debug */,
+				0D0000000000000000000093 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0D0000000000000000000082 /* Build configuration list for PBXNativeTarget "BarhopWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D0000000000000000000094 /* Debug */,
+				0D0000000000000000000095 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0D0000000000000000000083 /* Build configuration list for PBXNativeTarget "BarhopTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D0000000000000000000096 /* Debug */,
+				0D0000000000000000000097 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0D0000000000000000000001 /* Project object */;
+}

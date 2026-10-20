@@ -1,0 +1,93 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%lld hours" : {
+
+    },
+    "+1 Beer" : {
+
+    },
+    "🍺 %lld" : {
+
+    },
+    "🍺 Beer" : {
+
+    },
+    "📍 %lld" : {
+
+    },
+    "Auto-close after" : {
+
+    },
+    "Barhop" : {
+
+    },
+    "Beers" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Delete night" : {
+
+    },
+    "Delete this night?" : {
+
+    },
+    "Done" : {
+
+    },
+    "Duration" : {
+
+    },
+    "Edit time" : {
+
+    },
+    "End night" : {
+
+    },
+    "End this night?" : {
+
+    },
+    "If you haven't logged anything for this long, Barhop asks whether you're still out." : {
+
+    },
+    "Its beers, route and places will be removed." : {
+
+    },
+    "Liters" : {
+
+    },
+    "No beers yet" : {
+
+    },
+    "Past nights" : {
+
+    },
+    "Resume night" : {
+
+    },
+    "Save" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Start night" : {
+
+    },
+    "Time" : {
+
+    },
+    "Timeline" : {
+
+    },
+    "Your nights will show up here." : {
+
+    }
+  },
+  "version" : "1.0"
+}
