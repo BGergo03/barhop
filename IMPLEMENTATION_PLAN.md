@@ -1,6 +1,6 @@
 # Barhop — Implementation Plan
 
-Derived from [SPEC.md](SPEC.md). The spec is the source of truth for *what*; this document fixes *how* and *in what order*. Milestones follow SPEC §11 one-to-one; each ends with the spec's acceptance check plus the extra checks listed here.
+Derived from [SPEC.md](SPEC.md). The spec is the source of truth for *what*; this document fixes *how* and *in what order*. Milestones follow SPEC §11 one-to-one (M10–M15 are the Places work); each ends with the spec's acceptance check plus the extra checks listed here.
 
 ---
 
@@ -21,15 +21,16 @@ Derived from [SPEC.md](SPEC.md). The spec is the source of truth for *what*; thi
 ```
 Barhop.xcodeproj
 Barhop/
-  App/            BarhopApp.swift, AppModel (routing: Home vs Live night), RootView
-  Models/         Night, Entry, Venue, TrailPoint, enums, payloads, ModelContainer factory
+  App/            BarhopApp.swift, AppModel (routing: Home vs Live night), RootView (tabs from M10)
+  Models/         Night, Entry, Venue, TrailPoint, Place, MenuItem, PriceObservation, enums, payloads, ModelContainer factory
   Engine/         NightEngine, AutoClose, Recovery
+  Places/         PlaceStore, PlaceLinker, PlaceBackfill, NearbyPlaces (from M11)
   Location/       LocationService, TrailFilter, StopDetector, VenueNamer
   Activity/       LiveActivityController
   Notifications/  NotificationService
   Report/         ReportStats
   Share/          ShareRenderer, CardView, StickerView, MapSnapshot
-  UI/             Home/, LiveNight/, Report/, Settings/, Components/ (Timeline, VenueSheet, TrailMap)
+  UI/             Home/, Search/, Map/, Profile/, Place/, LiveNight/, Report/, Settings/, Components/ (Timeline, VenueSheet, TrailMap, NightPill)
   Resources/      Localizable.xcstrings, Assets.xcassets
 BarhopWidgets/    BarhopWidgetsBundle, NightLiveActivity, LogBeerControl
 Shared/           NightActivityAttributes, LogBeerIntent, UndoLastEntryIntent, Theme.swift, AppGroup.swift
@@ -59,7 +60,8 @@ Simulator/        BudapestCrawl.gpx
 - Intents reach it via `AppDependencyManager.shared.add { NightEngine.shared }` and `@Dependency`. Because the intents are `LiveActivityIntent`, they run in the app process, so the engine is the only writer.
 - Views read via `@Query`; they never write to the context directly.
 - **Enums in SwiftData**: store `EntryKind`, `EndReason`, `NameSource` as raw `String` properties with computed typed accessors, so `#Predicate` works and adding cases never needs a migration.
-- **Relationships** (inverses made explicit): `Night.entries/trailPoints/venues` cascade ↔ `night`; `Venue.entries` (nullify) ↔ `Entry.venue`.
+- **Relationships** (inverses made explicit): `Night.entries/trailPoints/venues` cascade ↔ `night`; `Venue.entries` (nullify) ↔ `Entry.venue`; `Place.stops` (nullify) ↔ `Venue.place`; `Place.menuItems` cascade ↔ `MenuItem.place`; `MenuItem.prices` cascade ↔ `PriceObservation.item`. `DrinkCategory` is stored raw like the other enums.
+- **`PlaceStore`** (`@MainActor`, from M11) is the single writer for places, menu items and prices, the way `NightEngine` is for nights: `place(for:)` (find-or-create from a map item), `link(_ venue:, to:)`, `setSaved(_:_:)`, `addPrice(place:category:name:sizeMl:amount:)`, `delete(_:)`. `NightEngine` calls it after naming a venue; views call it for Save / Add price.
 - `ModelContainer` built from one factory in `Shared/AppGroup.swift` pointing at the App Group container; falls back to the default app container if the App Group is unavailable (personal-team risk, SPEC §2) and logs which one it used.
 
 ---
@@ -184,6 +186,67 @@ Simulator/        BudapestCrawl.gpx
 
 ---
 
+### M10 — Tab shell
+- Raise `IPHONEOS_DEPLOYMENT_TARGET` to 26.0 on all targets (see risks first). Drop any `#available(iOS 18…)` / pre-26 branches that become dead.
+- `RootView`: `TabView` with `Tab` for Home · Search · Map · Profile (plain tabs, no `role: .search`), each with its own `NavigationStack` and `Route` path. Search and Map are placeholders for now.
+- Live night moves from a pushed route to `.fullScreenCover(item:)` driven by the active night; the existing `onChange` routing keeps auto-opening it and presents the Report (pushed on the Home stack) when the night ends.
+- `NightPill` in `.tabViewBottomAccessory`, shown only while a night is active: `Text(startedAt, style: .timer)`, 🍺 count, +1 → `engine.logBeer(source: .app)`; tap → reopen the cover.
+- Profile: nights list (moved from Home, with swipe-to-delete) and a Settings row (the Home gear goes away). Home keeps Start/Resume and shows the last 3 nights.
+- Tint the tab bar and pill with the `Theme` accent.
+✅ **Acceptance** (SPEC M10).
+
+---
+
+### M11 — Places
+- Models `Place`, `MenuItem`, `PriceObservation`, `DrinkCategory`; `Venue.place`. Lightweight migration only (new models, one optional relationship).
+- `VenueCandidate` gains `mapItemIdentifier: String?` (from `MKMapItem.identifier?.rawValue`) and `address`.
+- `PlaceLinker` (pure): given a candidate and the existing places, return `.existing(Place.ID)` by identifier, else by same name within 75 m, else `.create`. Unit-tested.
+- `NightEngine+Venues`: after auto-naming from a POI, call `PlaceStore` to link. Venue sheet POI pick → relink; custom name → leave the link as it is (renaming a stop never touches its place); address names → no link.
+- `PlaceBackfill`: once per install (`@AppStorage("placesBackfillDone")`), serially walks unlinked venues of ended nights, does a POI lookup, links them. Throttled, resumable, never blocks launch.
+- "Open place" in the venue sheet and Report venue rows; Live night header venue name → place. A minimal `PlaceDetailView` (name, address, visits) as the target.
+**Tests**: `PlaceLinker` identifier match, name+distance fallback, 76 m miss, different-name miss.
+✅ **Acceptance** (SPEC M11).
+
+---
+
+### M12 — Place detail + menu
+- Full `PlaceDetailView`: header, small `Map` with the pin, "Open in Maps" (`MKMapItem.openInMaps`, or the identifier when there is one), Save toggle, menu grouped by `DrinkCategory` with the latest price and `RelativeDateTimeFormatter`-style age, visits → Report.
+- Add drink / price sheet: category picker, name field with suggestions (distinct `MenuItem.name` across places for that category), size picker (0.33 / 0.4 / 0.5 L / custom, none for shots), amount with a HUF formatter. `PlaceStore.addPrice` finds-or-creates the item by (category, name normalized for case and whitespace, size) and appends an observation.
+- A temporary detail mode for an unstored map item: Save and Add price call `PlaceStore.place(for:)` first, then continue.
+- `Place.latestBeerPrice` helper (0.5 L beer with the newest observation), used by Map and Search.
+**Tests**: item find-or-create normalization; latest price picks the newest `seenAt`, not the newest insert.
+✅ **Acceptance** (SPEC M12).
+
+---
+
+### M13 — Map tab
+- `NearbyPlaces`: `MKLocalPointsOfInterestRequest(coordinateRegion:)` with the SPEC §6 category filter, run on `onMapCameraChange(frequency: .onEnd)`, debounced, cancelling the previous request, capped at ~50. Results whose identifier matches a stored place are dropped (that place is already drawn).
+- Annotations: stored places as amber pins (visited = has stops: filled; saved only: outlined), Maps results dimmed; label shows `latestBeerPrice` when present. Pin tap → `PlaceDetailView` in a sheet (temporary mode for Maps results).
+- Permission: request When-In-Use on first appearance if not determined; denied → initial camera on central Budapest.
+✅ **Acceptance** (SPEC M13).
+
+---
+
+### M14 — Search tab
+- `.searchable` on the Search tab's stack. Results:
+  - Your places: `@Query` filtered by name (`localizedStandardContains`).
+  - Drinks: `MenuItem`s by name, grouped per place, with the latest price.
+  - Nearby on Maps: `MKLocalSearch` with a natural-language query, `resultTypes: .pointOfInterest`, nightlife filter, around the user; debounced; hidden without location permission.
+- All / Visited / Saved segment filters the first two groups; sort by distance (from the current location; falls back to name without one) or by `latestBeerPrice` (places without one go last).
+- Empty field: saved places, then recently visited.
+✅ **Acceptance** (SPEC M14).
+
+---
+
+### M15 — Home & Profile
+- Home: Recent places (last 5 by latest stop `arrivedAt`) with "See all" → Profile.
+- Profile: Places list (Visited / Saved), swipe-to-delete with confirm → `PlaceStore.delete`.
+- Empty states: no places yet, a place with no menu, a Search with no results.
+- Polish pass as in M9: strings in the catalog, no literals outside `Theme`, guardrail copy check for the price UI (no "value" or "per beer" wording).
+✅ **Acceptance** (SPEC M15).
+
+---
+
 ## 3. Risks & decisions to watch
 
 | Risk | Where | Plan |
@@ -194,3 +257,6 @@ Simulator/        BudapestCrawl.gpx
 | Background location stops when app is killed by user | M2/M7 | Accepted; recovery on next launch starts a new segment. |
 | POI search returns poor names in Budapest | M3 | Address fallback + manual fix-up sheet. |
 | Visual direction (SPEC §10) | all | Decided after M8: "Amber night". Everything still routes through `Theme.swift`. |
+| Your iPhone isn't on iOS 26 | M10 | Check before raising the deployment target; if it isn't, stay on 18.0 with a plain `TabView` and a custom pill overlay instead of `.tabViewBottomAccessory`. |
+| `MKMapItem.identifier` is nil for some POIs | M11 | Fallback match: same name within 75 m (SPEC §6). |
+| MapKit throttles search requests (roughly 50 per minute per app) | M11, M13, M14 | Debounce map pans and search typing (~0.5 s); the backfill runs serially with a pause between lookups and resumes where it left off. |
