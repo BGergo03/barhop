@@ -194,4 +194,4 @@ Simulator/        BudapestCrawl.gpx
 | Live Activity can't restart in background after 8 h | M7 | Accepted limitation (SPEC §8); restart on next foreground. |
 | Background location stops when app is killed by user | M2/M7 | Accepted; recovery on next launch starts a new segment. |
 | POI search returns poor names in Budapest | M3 | Address fallback + manual fix-up sheet. |
-| Visual direction (SPEC §10, **OPEN**) | all | Everything routes through `Theme.swift`; no rework needed when decided. |
+| Visual direction (SPEC §10) | all | Decided after M8: "Amber night". Everything still routes through `Theme.swift`. |

@@ -168,7 +168,7 @@ Rules:
 
 ## 7. Screens
 
-All UI dark-mode-first using system styles until the visual direction is decided (**OPEN**, see §10).
+All UI dark-only, in the "Amber night" direction (§10).
 
 1. **Home**
    - Big "Start night" button (becomes "Resume night" if one is active — though normally the app opens straight into Live night).
@@ -245,7 +245,7 @@ struct NightActivityAttributes: ActivityAttributes {
 
 ## 10. UI, theme, strings
 
-- **OPEN — visual direction undecided.** Use system defaults (dark mode, system accent) for now, but route every color, font and corner radius through **`Theme.swift`** so the look can be swapped in one place later. Share card/sticker styling also reads from `Theme`.
+- **Visual direction: "Amber night"** (decided after M8): warm near-black canvas, a single beer-amber accent with a soft glow, warm white text, rounded type throughout. Lists are drawn as floating cards; the live night is a full-screen map with frosted panels. Every color, font, radius and spacing value still lives in **`Theme.swift`**; share card/sticker styling and the Live Activity read from it too.
 - App icon: placeholder (simple 🍺-style glyph on solid background) until the visual direction is set.
 - English only; **all user-facing strings in a String Catalog** (`Localizable.xcstrings`) for an easy Hungarian version later.
 
