@@ -209,7 +209,7 @@ Rules:
 - When a venue is named from a POI, link it to the `Place` with the same `mapItemIdentifier`, creating the place if none exists.
 - Fallback when the POI has no identifier: an existing place within **75 m** with the same name.
 - Stops named by address or with a custom name stay unlinked, until you pick a POI candidate in the venue sheet, which links them.
-- **Backfill** (once, after the Places migration, in the background, best-effort): run a POI lookup for each past stop that isn't linked and link it by the rules above. Failed lookups leave the stop unlinked; a manual pick still works.
+- **Backfill** (once, after the Places migration, in the background, best-effort): for each unlinked stop of an ended night, look up every POI within the venue radius and link the stop to the one with the same name (case- and accent-insensitive), by the rules above. Address-named stops and custom names Maps doesn't know stay unlinked; a manual pick still works. If every lookup comes back empty (offline), it runs again on the next launch.
 
 ---
 
@@ -254,7 +254,7 @@ All UI dark-only, in the "Amber night" direction (§10).
    - Timeline of entries (time, venue); swipe to delete, tap to edit time.
    - "End night" button.
 7. **Report** (for an ended night; opens from Home, Profile or a place's visits)
-   - Stats: duration, beers, liters (beers × 0.5), pace (beers/hour over duration), longest gap between beers, distance walked, venues (ordered, each with time spent; a linked venue row → Place detail).
+   - Stats: duration, beers, liters (beers × 0.5), pace (beers/hour over duration), longest gap between beers, distance walked, venues (ordered, each with time spent; a linked venue row → Place detail, an unlinked one → rename sheet; swipe a row to rename).
    - Map with trail + pins (pin tap → rename sheet, with "Open place" when linked).
    - Timeline (editable as above; edits update stats).
    - "Show map on share" toggle (stored as `showMapOnShare`).

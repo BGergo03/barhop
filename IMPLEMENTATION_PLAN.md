@@ -24,7 +24,7 @@ Barhop/
   App/            BarhopApp.swift, AppRouter (tabs, paths, Live night cover), RootView
   Models/         Night, Entry, Venue, TrailPoint, Place, MenuItem, PriceObservation, enums, payloads, ModelContainer factory
   Engine/         NightEngine, AutoClose, Recovery
-  Places/         PlaceStore, PlaceLinker, PlaceBackfill, NearbyPlaces (from M11)
+  Places/         PlaceStore, PlaceLinker, NearbyPlaces (from M11; the backfill is NightEngine+Places)
   Location/       LocationService, TrailFilter, StopDetector, VenueNamer
   Activity/       LiveActivityController
   Notifications/  NotificationService
@@ -202,9 +202,10 @@ Simulator/        BudapestCrawl.gpx
 - `VenueCandidate` gains `mapItemIdentifier: String?` (from `MKMapItem.identifier?.rawValue`) and `address`.
 - `PlaceLinker` (pure): given a candidate and the existing places, return `.existing(Place.ID)` by identifier, else by same name within 75 m, else `.create`. Unit-tested.
 - `NightEngine+Venues`: after auto-naming from a POI, call `PlaceStore` to link. Venue sheet POI pick → relink; custom name → leave the link as it is (renaming a stop never touches its place); address names → no link.
-- `PlaceBackfill`: once per install (`@AppStorage("placesBackfillDone")`), serially walks unlinked venues of ended nights, does a POI lookup, links them. Throttled, resumable, never blocks launch.
+- Backfill (`NightEngine+Places`): once per install (`placesBackfillDone` in `UserDefaults`), serially walks unlinked, non-address venues of ended nights, looks up every POI within 75 m (not just the nearest 5: in Kazinczy u. "Szimpla Kert" is the 9th result) and links the one with the same name. 1.5 s between lookups, resumable, never blocks launch; runs again next launch if every lookup came back empty.
 - "Open place" in the venue sheet and Report venue rows; Live night header venue name → place. A minimal `PlaceDetailView` (name, address, visits) as the target.
-**Tests**: `PlaceLinker` identifier match, name+distance fallback, 76 m miss, different-name miss.
+**Tests**: `PlaceLinker` identifier match, name+distance fallback, 76 m miss, different-name miss, different identifiers; engine linking, shared place across nights, address/custom-name rules, backfill.
+- `VenueNamer` moves off the APIs deprecated in iOS 26 (`MKMapItem.placemark`, `CLGeocoder`) to `MKMapItem.location` / `.address` and `MKReverseGeocodingRequest`, and refuses invalid coordinates (MapKit throws an exception for them).
 ✅ **Acceptance** (SPEC M11).
 
 ---
