@@ -17,6 +17,8 @@ final class Venue {
     var arrivedAt: Date
     var leftAt: Date?
     var night: Night?
+    /// The lasting place this stop was at; `nil` while unlinked (SPEC §6).
+    var place: Place?
     @Relationship(deleteRule: .nullify, inverse: \Entry.venue) var entries: [Entry] = []
 
     init(

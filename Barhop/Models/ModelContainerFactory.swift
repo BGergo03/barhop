@@ -3,7 +3,7 @@ import SwiftData
 import os
 
 enum ModelContainerFactory {
-    static let schema = Schema([Night.self, Entry.self, Venue.self, TrailPoint.self])
+    static let schema = Schema([Night.self, Entry.self, Venue.self, TrailPoint.self, Place.self, MenuItem.self, PriceObservation.self])
 
     static let shared: ModelContainer = make()
 
