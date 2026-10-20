@@ -13,3 +13,6 @@ Things the Simulator can't show, checked on a real iPhone (SPEC §12).
 | M7 | Debug build, Settings → "Treat hours as minutes", auto-close 2: log a beer, ignore the "Still out?" notification → about 2.5 min later the night ends at the beer's time, with the trail after it removed | _not yet verified_ |
 | M7 | "Still out" on the notification re-arms the reminder; "End night" ends the night and the app opens on its report | _not yet verified_ |
 | M7 | Force-quit during a night, relaunch: tracking resumes in a new segment (dashed gap on the map) and the Live Activity comes back | _not yet verified_ |
+| M8 | Report → Share → "Card (PNG)" and "Sticker (PNG)" both open the share sheet with `Barhop-YYYY-MM-DD.png` | _not yet verified_ |
+| M8 | "Copy sticker", pasted into an Instagram story: the background stays transparent | _not yet verified_ |
+| M8 | "Show map on share" off: the card has no map and the sticker no trail | _not yet verified_ |
