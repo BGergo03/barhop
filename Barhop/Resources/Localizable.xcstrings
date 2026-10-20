@@ -28,6 +28,12 @@
     "Cancel" : {
 
     },
+    "Custom name" : {
+
+    },
+    "Custom name…" : {
+
+    },
     "Delete" : {
 
     },
@@ -67,7 +73,16 @@
     "Location is off. Turn it on in Settings to map your night." : {
 
     },
+    "Name" : {
+
+    },
+    "Nearby places" : {
+
+    },
     "No beers yet" : {
+
+    },
+    "No places found nearby" : {
 
     },
     "Past nights" : {
@@ -83,6 +98,9 @@
 
     },
     "Start night" : {
+
+    },
+    "Stop %lld" : {
 
     },
     "Time" : {

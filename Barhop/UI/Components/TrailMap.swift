@@ -1,12 +1,14 @@
 import MapKit
 import SwiftUI
 
-/// The night's trail: solid segments, dashed connectors across tracking gaps.
+/// The night's trail: solid segments, dashed connectors across tracking gaps, venue pins.
+/// Tapping a pin opens the rename sheet.
 struct TrailMap: View {
     let night: Night
     /// Live night follows the user; the report frames the whole trail.
     let isLive: Bool
     @State private var position: MapCameraPosition
+    @State private var selectedVenue: Venue?
 
     init(night: Night, isLive: Bool) {
         self.night = night
@@ -26,6 +28,17 @@ struct TrailMap: View {
                 MapPolyline(coordinates: coordinates)
                     .stroke(Theme.Palette.trailGap, style: Theme.Stroke.trailGap)
             }
+            ForEach(night.venues) { venue in
+                Annotation(venue.name, coordinate: CLLocationCoordinate2D(latitude: venue.latitude, longitude: venue.longitude)) {
+                    Button {
+                        selectedVenue = venue
+                    } label: {
+                        Image(systemName: "mappin.circle.fill")
+                            .font(Theme.Typography.venuePin)
+                            .foregroundStyle(Theme.Palette.onAccent, Theme.Palette.venuePin)
+                    }
+                }
+            }
             if isLive {
                 UserAnnotation()
             }
@@ -34,6 +47,9 @@ struct TrailMap: View {
         .mapControls {
             if isLive { MapUserLocationButton() }
             MapCompass()
+        }
+        .sheet(item: $selectedVenue) { venue in
+            VenueSheet(venue: venue)
         }
     }
 }

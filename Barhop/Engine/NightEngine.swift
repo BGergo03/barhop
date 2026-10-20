@@ -8,22 +8,26 @@ import os
 @MainActor
 @Observable
 final class NightEngine {
-    static let shared = NightEngine(context: ModelContainerFactory.shared.mainContext, location: LocationService())
+    static let shared = NightEngine(
+        context: ModelContainerFactory.shared.mainContext,
+        location: LocationService(),
+        namer: VenueNamer()
+    )
 
-    /// Trail points are batched; entries and venues are saved immediately (SPEC §4).
-    private static let trailSaveInterval: TimeInterval = 30
-    private static let entryFixTimeout: Duration = .seconds(5)
-
-    @ObservationIgnored private let context: ModelContext
+    // Shared with the extensions in NightEngine+Tracking.swift and NightEngine+Venues.swift.
+    @ObservationIgnored let context: ModelContext
     @ObservationIgnored let location: LocationProviding
-    @ObservationIgnored private let logger = Logger(subsystem: "com.bgergo03.barhop", category: "NightEngine")
-    @ObservationIgnored private var trackedNight: Night?
-    @ObservationIgnored private var trailFilter = TrailFilter()
-    @ObservationIgnored private var lastTrailSave = Date.distantPast
+    @ObservationIgnored let namer: VenueNaming
+    @ObservationIgnored let logger = Logger(subsystem: "com.bgergo03.barhop", category: "NightEngine")
+    @ObservationIgnored var trackedNight: Night?
+    @ObservationIgnored var trailFilter = TrailFilter()
+    @ObservationIgnored var stopDetector = StopDetector()
+    @ObservationIgnored var lastTrailSave = Date.distantPast
 
-    init(context: ModelContext, location: LocationProviding) {
+    init(context: ModelContext, location: LocationProviding, namer: VenueNaming) {
         self.context = context
         self.location = location
+        self.namer = namer
     }
 
     var isLocationDenied: Bool { location.isAuthorizationDenied }
@@ -79,6 +83,7 @@ final class NightEngine {
     func endNight(_ night: Night, reason: EndReason = .manual, at date: Date = .now) {
         guard night.isActive else { return }
         if trackedNight == night { stopTracking() }
+        closeOpenVenue(of: night, at: date)
         night.endedAt = date
         night.endReason = reason
         save()
@@ -89,86 +94,12 @@ final class NightEngine {
         save()
     }
 
-    /// Restarts tracking for an active night after the app was relaunched
-    /// (including a background relaunch by Core Location). The restart opens a new segment.
-    func resumeTrackingIfNeeded() {
-        guard trackedNight == nil, let night = activeNight else { return }
-        startTracking(night, startNewSegment: true)
-    }
-
-    /// Persists batched trail points, e.g. when the app moves to the background.
-    func flush() {
-        save()
-    }
-
-    // MARK: - Location
-
-    private func startTracking(_ night: Night, startNewSegment: Bool) {
-        let lastPoint = night.trailPoints.max { $0.timestamp < $1.timestamp }.map {
-            TrailFilter.AcceptedPoint(
-                fix: LocationFix(timestamp: $0.timestamp, latitude: $0.latitude, longitude: $0.longitude, horizontalAccuracy: $0.horizontalAccuracy),
-                segment: $0.segment
-            )
-        }
-        trailFilter = TrailFilter(resumingFrom: lastPoint, startNewSegment: startNewSegment)
-        trackedNight = night
-        location.startUpdates { [weak self] update in
-            self?.handle(update)
-        }
-    }
-
-    private func stopTracking() {
-        location.stopUpdates()
-        trackedNight = nil
-    }
-
-    private func handle(_ update: LocationUpdate) {
-        guard let night = trackedNight else { return }
-        let accepted = trailFilter.process(update)
-        guard !accepted.isEmpty else { return }
-        for point in accepted {
-            let trailPoint = TrailPoint(
-                timestamp: point.fix.timestamp,
-                latitude: point.fix.latitude,
-                longitude: point.fix.longitude,
-                horizontalAccuracy: point.fix.horizontalAccuracy,
-                segment: point.segment
-            )
-            context.insert(trailPoint)
-            trailPoint.night = night
-        }
-        if Date.now.timeIntervalSince(lastTrailSave) >= Self.trailSaveInterval {
-            save()
-        }
-    }
-
-    /// Takes a fresh fix for a just-logged entry, falling back to the latest trail point.
-    private func attachLocation(toEntryWithID entryID: UUID) async {
-        let fix = await location.currentFix(timeout: Self.entryFixTimeout)
-        // Re-fetch: the entry may have been deleted or undone while waiting for the fix,
-        // and touching a deleted model traps.
-        let descriptor = FetchDescriptor<Entry>(predicate: #Predicate { $0.id == entryID })
-        guard let entry = try? context.fetch(descriptor).first else { return }
-        if let fix {
-            entry.latitude = fix.latitude
-            entry.longitude = fix.longitude
-            entry.horizontalAccuracy = fix.horizontalAccuracy
-        } else if let latest = entry.night?.trailPoints.max(by: { $0.timestamp < $1.timestamp }) {
-            entry.latitude = latest.latitude
-            entry.longitude = latest.longitude
-            entry.horizontalAccuracy = latest.horizontalAccuracy
-        } else {
-            return
-        }
-        save()
-    }
-
     private func refreshLastActivity(of night: Night) {
         night.lastActivityAt = night.entries.map(\.timestamp).max() ?? night.startedAt
         save()
     }
 
-    private func save() {
+    func save() {
         do {
             try context.save()
             lastTrailSave = .now

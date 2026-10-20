@@ -15,6 +15,7 @@ enum Theme {
         static let surface = Color(uiColor: .secondarySystemBackground)
         static let trail = Color.accentColor
         static let trailGap = Color.secondary
+        static let venuePin = Color.orange
     }
 
     enum Typography {
@@ -24,6 +25,7 @@ enum Theme {
         static let body = Font.body
         static let caption = Font.caption
         static let primaryButton = Font.title2.weight(.semibold)
+        static let venuePin = Font.title
     }
 
     enum Radius {

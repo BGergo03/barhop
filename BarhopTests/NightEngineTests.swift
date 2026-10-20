@@ -5,17 +5,10 @@ import Testing
 
 @MainActor
 struct NightEngineTests {
-    /// The engine attaches entry locations in a detached task that can outlive a test.
-    /// The app's container lives for the whole process, so keep test containers alive too.
-    private static var retainedContainers: [ModelContainer] = []
-
-    let container: ModelContainer = {
-        let container = ModelContainerFactory.make(inMemory: true)
-        retainedContainers.append(container)
-        return container
-    }()
+    let container = TestSupport.makeContainer()
     let location = FakeLocationProvider()
-    var engine: NightEngine { NightEngine(context: container.mainContext, location: location) }
+    let namer = FakeVenueNamer()
+    var engine: NightEngine { NightEngine(context: container.mainContext, location: location, namer: namer) }
 
     @Test func loggingWithoutActiveNightStartsOne() throws {
         let engine = engine
@@ -101,7 +94,7 @@ struct NightEngineTests {
         #expect(night.trailPoints.count == 1)
 
         // Simulate a relaunch: a fresh engine over the same store.
-        let relaunched = NightEngine(context: container.mainContext, location: location)
+        let relaunched = NightEngine(context: container.mainContext, location: location, namer: namer)
         relaunched.resumeTrackingIfNeeded()
         location.send(LocationFix(timestamp: start.addingTimeInterval(30), latitude: 47.4990, longitude: 19.0633, horizontalAccuracy: 10))
         #expect(Set(night.trailPoints.map(\.segment)) == [0, 1])
@@ -111,7 +104,7 @@ struct NightEngineTests {
         let engine = engine
         let entry = engine.logBeer()
         engine.deleteEntry(entry)
-        for _ in 0..<50 { await Task.yield() }
+        await TestSupport.settle()
         #expect(engine.activeNight?.entries.isEmpty == true)
     }
 
@@ -119,7 +112,7 @@ struct NightEngineTests {
         let engine = engine
         location.fix = LocationFix(timestamp: .now, latitude: 47.5, longitude: 19.06, horizontalAccuracy: 8)
         let entry = engine.logBeer()
-        for _ in 0..<50 where entry.latitude == nil { await Task.yield() }
+        await TestSupport.settle()
         #expect(entry.latitude == 47.5)
         #expect(entry.horizontalAccuracy == 8)
     }
