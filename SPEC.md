@@ -244,7 +244,8 @@ All UI dark-only, in the "Amber night" direction (§10).
 5. **Place detail**
    - Name, address, small map, "Open in Maps", Save toggle.
    - Menu grouped by drink category; each item shows its latest price and age ("1 200 Ft · 3 weeks ago").
-   - **Add drink / price**: category, name (suggested from names used at other places), size, price. HUF only.
+   - **Add drink / price**: category, name (suggested from names used at other places), size, price. HUF only. Tapping a drink opens the same form filled in, for a new price.
+   - Swipe a drink to delete it with all its prices (for mistakes; a changed price is a new observation, not an edit).
    - **Your visits**: the nights you stopped here; tap → Report.
 6. **Live night** (full-screen cover; auto-opens when a night is active)
    - Live map: trail (solid segments, dashed gaps), venue pins, user location. Pin tap → rename sheet.

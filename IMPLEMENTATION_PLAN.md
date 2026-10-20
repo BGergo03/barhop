@@ -213,7 +213,8 @@ Simulator/        BudapestCrawl.gpx
 ### M12 — Place detail + menu
 - Full `PlaceDetailView`: header, small `Map` with the pin, "Open in Maps" (`MKMapItem.openInMaps`, or the identifier when there is one), Save toggle, menu grouped by `DrinkCategory` with the latest price and `RelativeDateTimeFormatter`-style age, visits → Report.
 - Add drink / price sheet: category picker, name field with suggestions (distinct `MenuItem.name` across places for that category), size picker (0.33 / 0.4 / 0.5 L / custom, none for shots), amount with a HUF formatter. `PlaceStore.addPrice` finds-or-creates the item by (category, name normalized for case and whitespace, size) and appends an observation.
-- A temporary detail mode for an unstored map item: Save and Add price call `PlaceStore.place(for:)` first, then continue.
+- Tap a drink → the sheet prefilled for a new price; swipe → delete the drink (`PlaceStore.deleteMenuItem`).
+- The temporary detail mode for an unstored Maps result moves to M13, where the first one appears.
 - `Place.latestBeerPrice` helper (0.5 L beer with the newest observation), used by Map and Search.
 **Tests**: item find-or-create normalization; latest price picks the newest `seenAt`, not the newest insert.
 ✅ **Acceptance** (SPEC M12).
@@ -221,6 +222,7 @@ Simulator/        BudapestCrawl.gpx
 ---
 
 ### M13 — Map tab
+- Temporary Place detail for an unstored Maps result (from M12): Save and Add price call `PlaceStore.place(for:)` first, then continue on the stored place.
 - `NearbyPlaces`: `MKLocalPointsOfInterestRequest(coordinateRegion:)` with the SPEC §6 category filter, run on `onMapCameraChange(frequency: .onEnd)`, debounced, cancelling the previous request, capped at ~50. Results whose identifier matches a stored place are dropped (that place is already drawn).
 - Annotations: stored places as amber pins (visited = has stops: filled; saved only: outlined), Maps results dimmed; label shows `latestBeerPrice` when present. Pin tap → `PlaceDetailView` in a sheet (temporary mode for Maps results).
 - Permission: request When-In-Use on first appearance if not determined; denied → initial camera on central Budapest.
