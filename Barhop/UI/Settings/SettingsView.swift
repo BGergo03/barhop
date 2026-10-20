@@ -6,6 +6,9 @@ struct SettingsView: View {
     @AppStorage(AppSettings.autoCloseDebugMinutesKey) private var autoCloseDebugMinutes = false
     #endif
     @Environment(NightEngine.self) private var engine
+    #if DEBUG
+    @State private var hasSampleData = false
+    #endif
 
     var body: some View {
         Form {
@@ -28,6 +31,22 @@ struct SettingsView: View {
             } footer: {
                 Text("Also shortens the 30 minute grace period to 30 seconds.")
             }
+            Section {
+                Button("Add sample data") {
+                    engine.addSampleData()
+                    hasSampleData = engine.hasSampleData
+                }
+                .disabled(hasSampleData)
+                .cardRow()
+                Button("Remove sample data", role: .destructive) {
+                    engine.removeSampleData()
+                    hasSampleData = engine.hasSampleData
+                }
+                .disabled(!hasSampleData)
+                .cardRow()
+            } footer: {
+                Text("Five made-up nights around Kazinczy utca, with their places and prices. Removing them leaves your own nights alone.")
+            }
             #endif
         }
         .scrollContentBackground(.hidden)
@@ -37,6 +56,7 @@ struct SettingsView: View {
         .onChange(of: autoCloseHours) { engine.rescheduleStillOutReminder() }
         #if DEBUG
         .onChange(of: autoCloseDebugMinutes) { engine.rescheduleStillOutReminder() }
+        .onAppear { hasSampleData = engine.hasSampleData }
         #endif
     }
 }

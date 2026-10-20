@@ -6,4 +6,6 @@ enum AppSettings {
     static let autoCloseDebugMinutesKey = "autoCloseDebugMinutes"
     /// Set once the one-time linking of pre-Places stops has run (SPEC §6).
     static let placesBackfillDoneKey = "placesBackfillDone"
+    /// Debug builds only: the nights and places the sample data added, so it can remove them.
+    static let sampleDataIDsKey = "sampleDataIDs"
 }
