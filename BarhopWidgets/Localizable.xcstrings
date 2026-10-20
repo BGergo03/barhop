@@ -19,6 +19,12 @@
     "Log a beer" : {
 
     },
+    "Logs a beer, starting a night if none is active." : {
+
+    },
+    "Open Barhop to log beers." : {
+
+    },
     "Undo" : {
 
     },
