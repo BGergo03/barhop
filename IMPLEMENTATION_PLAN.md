@@ -10,7 +10,6 @@ Derived from [SPEC.md](SPEC.md). The spec is the source of truth for *what*; thi
 - `main` is always buildable. One branch per milestone: `m1-skeleton`, `m2-trail`, … merged into `main` once its acceptance check passes.
 - Small commits, imperative subject, prefixed with the milestone: `M2: Filter trail fixes by accuracy and distance`.
 - **Commits are authored by the developer only — no `Co-Authored-By` trailers, no "Generated with" lines, no AI attribution of any kind.**
-- Tag each milestone on merge: `m1`, `m2`, …
 
 ### Code
 - Swift 6 language mode, strict concurrency. UI, `NightEngine` and SwiftData access on `@MainActor`.
