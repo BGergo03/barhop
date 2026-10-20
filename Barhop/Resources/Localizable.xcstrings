@@ -107,9 +107,6 @@
     "If you haven't logged anything for this long, Barhop asks whether you're still out." : {
 
     },
-    "Its beers, route and places will be removed." : {
-
-    },
     "Last beer" : {
 
     },
@@ -237,6 +234,21 @@
 
     },
     "A map of your places is coming soon." : {
+
+    },
+    "Open place" : {
+
+    },
+    "Rename" : {
+
+    },
+    "Your visits" : {
+
+    },
+    "Your visits will show up here." : {
+
+    },
+    "Its beers and route will be removed. The places you visited stay." : {
 
     }
   },

@@ -49,7 +49,7 @@ struct ProfileView: View {
                 engine.deleteNight(night)
             }
         } message: { _ in
-            Text("Its beers, route and places will be removed.")
+            Text("Its beers and route will be removed. The places you visited stay.")
         }
     }
 

@@ -38,6 +38,7 @@ struct RootView: View {
         .fullScreenCover(item: $router.liveNight) { night in
             NavigationStack {
                 LiveNightView(night: night)
+                    .routeDestinations()
             }
         }
         .environment(router)
@@ -47,11 +48,13 @@ struct RootView: View {
     }
 }
 
-private extension View {
+extension View {
+    /// Every screen a tab's stack (or the Live night cover's) can push.
     func routeDestinations() -> some View {
         navigationDestination(for: Route.self) { route in
             switch route {
             case .report(let night): ReportView(night: night)
+            case .place(let place): PlaceDetailView(place: place)
             case .settings: SettingsView()
             }
         }

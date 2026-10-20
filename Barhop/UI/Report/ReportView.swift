@@ -7,6 +7,7 @@ struct ReportView: View {
     let night: Night
     @Environment(NightEngine.self) private var engine
     @State private var selectedVenue: Venue?
+    @State private var openedPlace: Place?
     @State private var editingEntry: Entry?
     @State private var copiedStickers = 0
 
@@ -67,7 +68,10 @@ struct ReportView: View {
         .sensoryFeedback(.success, trigger: copiedStickers)
         // Sheets hang off the List, not its rows, so they survive the List re-rendering.
         .sheet(item: $selectedVenue) { venue in
-            VenueSheet(venue: venue)
+            VenueSheet(venue: venue) { openedPlace = $0 }
+        }
+        .navigationDestination(item: $openedPlace) { place in
+            PlaceDetailView(place: place)
         }
         .entryTimeEditor($editingEntry)
     }
@@ -129,13 +133,25 @@ struct ReportView: View {
     private func venuesSection(_ venues: [ReportStats.VenueTime]) -> some View {
         Section {
             ForEach(Array(venues.enumerated()), id: \.element.id) { index, venueTime in
+                let venue = night.venues.first { $0.id == venueTime.id }
+                // A linked stop opens its place; an unlinked one goes straight to the fix-up sheet.
                 Button {
-                    selectedVenue = night.venues.first { $0.id == venueTime.id }
+                    if let place = venue?.place {
+                        openedPlace = place
+                    } else {
+                        selectedVenue = venue
+                    }
                 } label: {
-                    VenueTimeRow(index: index + 1, venueTime: venueTime)
+                    VenueTimeRow(index: index + 1, venueTime: venueTime, isLinked: venue?.place != nil)
                 }
                 .tint(Theme.Palette.primaryText)
                 .cardRow()
+                .swipeActions {
+                    Button("Rename") {
+                        selectedVenue = venue
+                    }
+                    .tint(Theme.Palette.accentDeep)
+                }
             }
         } header: {
             SectionLabel("Places")
@@ -169,6 +185,7 @@ struct ReportView: View {
 private struct VenueTimeRow: View {
     let index: Int
     let venueTime: ReportStats.VenueTime
+    let isLinked: Bool
 
     var body: some View {
         HStack(spacing: Theme.Spacing.medium) {
@@ -189,6 +206,11 @@ private struct VenueTimeRow: View {
             Text(venueTime.timeSpent.durationText)
                 .font(Theme.Typography.body.monospacedDigit())
                 .foregroundStyle(Theme.Palette.secondaryText)
+            if isLinked {
+                Image(systemName: "chevron.right")
+                    .font(Theme.Typography.caption)
+                    .foregroundStyle(Theme.Palette.tertiaryText)
+            }
         }
     }
 }

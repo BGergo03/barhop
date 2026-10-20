@@ -1,8 +1,11 @@
 import SwiftUI
 
-/// Fix-up for a venue's name: nearest places plus a custom name (SPEC §6).
+/// Fix-up for a venue's name: nearest places plus a custom name (SPEC §6), and the way to
+/// the place it's linked to.
 struct VenueSheet: View {
     let venue: Venue
+    /// Called after the sheet dismisses itself, so the host can push the place.
+    var openPlace: (Place) -> Void
     @Environment(NightEngine.self) private var engine
     @Environment(\.dismiss) private var dismiss
     @State private var candidates: [VenueCandidate]?
@@ -12,6 +15,15 @@ struct VenueSheet: View {
     var body: some View {
         NavigationStack {
             List {
+                if let place = venue.place {
+                    Section {
+                        Button("Open place", systemImage: "building.2") {
+                            dismiss()
+                            openPlace(place)
+                        }
+                        .cardRow()
+                    }
+                }
                 Section {
                     if let candidates {
                         if candidates.isEmpty {
@@ -20,7 +32,8 @@ struct VenueSheet: View {
                         }
                         ForEach(candidates) { candidate in
                             Button {
-                                rename(to: candidate.name)
+                                engine.renameVenue(venue, to: candidate)
+                                dismiss()
                             } label: {
                                 CandidateRow(candidate: candidate, isCurrent: candidate.name == venue.name)
                             }

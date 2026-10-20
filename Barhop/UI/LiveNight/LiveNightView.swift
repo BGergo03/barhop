@@ -9,6 +9,7 @@ struct LiveNightView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var confirmsEnd = false
     @State private var selectedVenue: Venue?
+    @State private var openedPlace: Place?
     @State private var editingEntry: Entry?
     @State private var showsTimeline = false
 
@@ -46,7 +47,10 @@ struct LiveNightView: View {
             }
         }
         .sheet(item: $selectedVenue) { venue in
-            VenueSheet(venue: venue)
+            VenueSheet(venue: venue) { openedPlace = $0 }
+        }
+        .navigationDestination(item: $openedPlace) { place in
+            PlaceDetailView(place: place)
         }
         .sheet(isPresented: $showsTimeline) {
             TimelineSheet(night: night)
@@ -92,11 +96,16 @@ struct LiveNightView: View {
                 Text(night.startedAt, style: .timer)
                     .font(Theme.Typography.timer)
                     .foregroundStyle(Theme.Palette.primaryText)
-                Label(night.currentVenue?.name ?? String(localized: "On the move"), systemImage: "mappin")
-                    .labelStyle(CompactLabelStyle())
-                    .font(Theme.Typography.caption)
-                    .foregroundStyle(Theme.Palette.secondaryText)
-                    .lineLimit(1)
+                Button {
+                    openCurrentVenue()
+                } label: {
+                    Label(night.currentVenue?.name ?? String(localized: "On the move"), systemImage: "mappin")
+                        .labelStyle(CompactLabelStyle())
+                        .font(Theme.Typography.caption)
+                        .foregroundStyle(Theme.Palette.secondaryText)
+                        .lineLimit(1)
+                }
+                .buttonStyle(.plain)
             }
             Spacer(minLength: 0)
             VStack(alignment: .trailing, spacing: 0) {
@@ -113,6 +122,16 @@ struct LiveNightView: View {
             }
         }
         .floatingPanel()
+    }
+
+    /// The place you're at, or the fix-up sheet when the stop isn't linked to one yet.
+    private func openCurrentVenue() {
+        guard let venue = night.currentVenue else { return }
+        if let place = venue.place {
+            openedPlace = place
+        } else {
+            selectedVenue = venue
+        }
     }
 
     private var beerPanel: some View {

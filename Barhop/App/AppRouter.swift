@@ -9,6 +9,7 @@ enum AppTab: Hashable {
 
 enum Route: Hashable {
     case report(Night)
+    case place(Place)
     case settings
 }
 
