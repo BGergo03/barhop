@@ -1,10 +1,28 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "🍺" : {
+    "+1 Beer" : {
 
     },
     "🍺 %lld" : {
+
+    },
+    "Added Beer ·" : {
+
+    },
+    "Adds a beer to your night, starting a night if none is active." : {
+
+    },
+    "Entry ID" : {
+
+    },
+    "Log a beer" : {
+
+    },
+    "Undo" : {
+
+    },
+    "Undo last beer" : {
 
     }
   },

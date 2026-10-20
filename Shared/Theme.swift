@@ -16,6 +16,7 @@ enum Theme {
         static let trail = Color.accentColor
         static let trailGap = Color.secondary
         static let venuePin = Color.orange
+        static let activityBackground = Color.black.opacity(0.6)
     }
 
     enum Typography {
@@ -26,6 +27,10 @@ enum Theme {
         static let caption = Font.caption
         static let primaryButton = Font.title2.weight(.semibold)
         static let venuePin = Font.title
+        static let activityCount = Font.system(size: 40, weight: .bold, design: .rounded)
+        static let activityButton = Font.headline
+        static let compactTimer = Font.body.monospacedDigit()
+        static let activityUndo = Font.caption.weight(.semibold)
     }
 
     enum Radius {
@@ -43,6 +48,8 @@ enum Theme {
         static let primaryButtonHeight: CGFloat = 72
         static let liveMapHeight: CGFloat = 280
         static let reportMapHeight: CGFloat = 240
+        /// `Text(_, style: .timer)` claims all available width; this keeps the Dynamic Island compact.
+        static let compactTimerWidth: CGFloat = 52
     }
 
     enum Stroke {
