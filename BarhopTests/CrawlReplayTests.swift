@@ -2,7 +2,7 @@ import Foundation
 import Testing
 @testable import Barhop
 
-/// Replays Simulator/BudapestCrawl.gpx through the trail filter and stop detector, sampling
+/// Replays the Simulator crawl routes through the trail filter and stop detector, sampling
 /// once a second between waypoints the way Xcode's location simulation plays a route.
 struct CrawlReplayTests {
     struct Waypoint {
@@ -12,11 +12,11 @@ struct CrawlReplayTests {
         var name: String?
     }
 
-    static func loadCrawl() throws -> [Waypoint] {
+    static func loadCrawl(_ file: String = "BudapestCrawl.gpx") throws -> [Waypoint] {
         let url = URL(filePath: #filePath)
             .deletingLastPathComponent()
             .deletingLastPathComponent()
-            .appending(path: "Simulator/BudapestCrawl.gpx")
+            .appending(path: "Simulator").appending(path: file)
         let gpx = try String(contentsOf: url, encoding: .utf8)
         let pattern = /<wpt lat="([-\d.]+)" lon="([-\d.]+)"><time>([^<]+)<\/time>(?:<name>([^<]+)<\/name>)?/
         return try gpx.matches(of: pattern).map { match in
@@ -44,8 +44,9 @@ struct CrawlReplayTests {
         }
     }
 
-    @Test func crawlYieldsOneStopPerBar() throws {
-        let waypoints = try Self.loadCrawl()
+    @Test(arguments: ["BudapestCrawl.gpx", "BudapestCrawlShort.gpx"])
+    func crawlYieldsOneStopPerBar(file: String) throws {
+        let waypoints = try Self.loadCrawl(file)
         let bars = waypoints.filter { $0.name != nil }
         #expect(bars.count == 4)
 
