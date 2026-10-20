@@ -50,9 +50,6 @@
     "Add a price" : {
 
     },
-    "Add sample data" : {
-
-    },
     "Adds a beer to your night, starting a night if none is active." : {
 
     },
@@ -131,9 +128,6 @@
     "Entry ID" : {
 
     },
-    "Five made-up nights around Kazinczy utca, with their places and prices. Removing them leaves your own nights alone." : {
-
-    },
     "Home" : {
 
     },
@@ -162,6 +156,9 @@
 
     },
     "Menu" : {
+
+    },
+    "ml" : {
 
     },
     "Name" : {
@@ -219,9 +216,6 @@
 
     },
     "Recent nights" : {
-
-    },
-    "Remove sample data" : {
 
     },
     "Rename" : {
@@ -305,6 +299,9 @@
     "Timeline" : {
 
     },
+    "today" : {
+
+    },
     "Undo last beer" : {
 
     },
@@ -318,12 +315,6 @@
 
     },
     "Your visits will show up here." : {
-
-    },
-    "ml" : {
-
-    },
-    "today" : {
 
     }
   },
