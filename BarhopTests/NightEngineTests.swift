@@ -8,7 +8,8 @@ struct NightEngineTests {
     let container = TestSupport.makeContainer()
     let location = FakeLocationProvider()
     let namer = FakeVenueNamer()
-    var engine: NightEngine { NightEngine(context: container.mainContext, location: location, namer: namer) }
+    let liveActivity = FakeLiveActivity()
+    var engine: NightEngine { NightEngine(context: container.mainContext, location: location, namer: namer, liveActivity: liveActivity) }
 
     @Test func loggingWithoutActiveNightStartsOne() throws {
         let engine = engine
@@ -94,7 +95,7 @@ struct NightEngineTests {
         #expect(night.trailPoints.count == 1)
 
         // Simulate a relaunch: a fresh engine over the same store.
-        let relaunched = NightEngine(context: container.mainContext, location: location, namer: namer)
+        let relaunched = NightEngine(context: container.mainContext, location: location, namer: namer, liveActivity: liveActivity)
         relaunched.resumeTrackingIfNeeded()
         location.send(LocationFix(timestamp: start.addingTimeInterval(30), latitude: 47.4990, longitude: 19.0633, horizontalAccuracy: 10))
         #expect(Set(night.trailPoints.map(\.segment)) == [0, 1])

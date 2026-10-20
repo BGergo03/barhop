@@ -22,6 +22,9 @@
     "—" : {
 
     },
+    "Adds a beer to your night, starting a night if none is active." : {
+
+    },
     "Auto-close after" : {
 
     },
@@ -73,6 +76,9 @@
     "End this night?" : {
 
     },
+    "Entry ID" : {
+
+    },
     "If you haven't logged anything for this long, Barhop asks whether you're still out." : {
 
     },
@@ -83,6 +89,9 @@
 
     },
     "Location is off. Turn it on in Settings to map your night." : {
+
+    },
+    "Log a beer" : {
 
     },
     "Longest gap" : {
@@ -137,6 +146,9 @@
 
     },
     "Timeline" : {
+
+    },
+    "Undo last beer" : {
 
     },
     "Your nights will show up here." : {

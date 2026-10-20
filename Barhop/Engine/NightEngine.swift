@@ -11,23 +11,27 @@ final class NightEngine {
     static let shared = NightEngine(
         context: ModelContainerFactory.shared.mainContext,
         location: LocationService(),
-        namer: VenueNamer()
+        namer: VenueNamer(),
+        liveActivity: LiveActivityController()
     )
 
-    // Shared with the extensions in NightEngine+Tracking.swift and NightEngine+Venues.swift.
+    // Shared with the extensions in NightEngine+Tracking.swift, +Venues.swift and +LiveActivity.swift.
     @ObservationIgnored let context: ModelContext
     @ObservationIgnored let location: LocationProviding
     @ObservationIgnored let namer: VenueNaming
+    @ObservationIgnored let liveActivity: LiveActivityControlling
     @ObservationIgnored let logger = Logger(subsystem: "com.bgergo03.barhop", category: "NightEngine")
     @ObservationIgnored var trackedNight: Night?
     @ObservationIgnored var trailFilter = TrailFilter()
     @ObservationIgnored var stopDetector = StopDetector()
     @ObservationIgnored var lastTrailSave = Date.distantPast
+    @ObservationIgnored var undoOffer: UndoOffer?
 
-    init(context: ModelContext, location: LocationProviding, namer: VenueNaming) {
+    init(context: ModelContext, location: LocationProviding, namer: VenueNaming, liveActivity: LiveActivityControlling) {
         self.context = context
         self.location = location
         self.namer = namer
+        self.liveActivity = liveActivity
     }
 
     var isLocationDenied: Bool { location.isAuthorizationDenied }
@@ -55,19 +59,27 @@ final class NightEngine {
     /// Logs a beer, starting a night first if none is active.
     @discardableResult
     func logBeer(at date: Date = .now) -> Entry {
-        let night = startNight(at: date)
-        let entry = Entry(drink: .beer, at: date)
-        context.insert(entry)
-        entry.night = night
-        night.lastActivityAt = date
-        save()
+        let entry = insertBeer(at: date)
         let entryID = entry.id
         Task { await attachLocation(toEntryWithID: entryID) }
         return entry
     }
 
+    /// Logs a beer without a location yet; callers attach one with `attachLocation(toEntryWithID:)`.
+    func insertBeer(at date: Date) -> Entry {
+        let night = startNight(at: date)
+        let entry = Entry(drink: .beer, at: date)
+        context.insert(entry)
+        entry.night = night
+        night.lastActivityAt = date
+        offerUndo(for: entry)
+        save()
+        return entry
+    }
+
     func deleteEntry(_ entry: Entry) {
         let night = entry.night
+        if undoOffer?.entryID == entry.id { undoOffer = nil }
         context.delete(entry)
         save()
         if let night { refreshLastActivity(of: night) }
@@ -111,5 +123,6 @@ final class NightEngine {
         } catch {
             logger.error("Save failed: \(error.localizedDescription, privacy: .public)")
         }
+        refreshLiveActivity()
     }
 }

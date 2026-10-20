@@ -10,6 +10,8 @@ extension NightEngine {
     /// Restarts tracking for an active night after the app was relaunched
     /// (including a background relaunch by Core Location). The restart opens a new segment.
     func resumeTrackingIfNeeded() {
+        // Also restarts the Live Activity if it is gone (~8 h limit, or a background start failed).
+        refreshLiveActivity()
         guard trackedNight == nil, let night = activeNight else { return }
         startTracking(night, startNewSegment: true)
     }

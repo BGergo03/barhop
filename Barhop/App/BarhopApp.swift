@@ -1,3 +1,4 @@
+import AppIntents
 import SwiftData
 import SwiftUI
 
@@ -6,6 +7,9 @@ struct BarhopApp: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
+        // Intents from the Live Activity run in this process and reach the engine through this.
+        let handler: any NightIntentHandling = NightEngine.shared
+        AppDependencyManager.shared.add(dependency: handler)
         // Runs on background relaunches by Core Location too, where no scene becomes active.
         NightEngine.shared.resumeTrackingIfNeeded()
     }
