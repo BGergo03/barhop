@@ -1,11 +1,12 @@
 import SwiftUI
 
 /// Entries newest first; swipe to delete, tap to edit the time.
-/// Shared by Live night and Report, so it lives inside the caller's `List`.
+/// Shared by Live night and Report, so it lives inside the caller's `List`; the caller
+/// presents the editor with `entryTimeEditor(_:)` outside the `List`.
 struct EntryTimelineSection: View {
     let night: Night
+    @Binding var editingEntry: Entry?
     @Environment(NightEngine.self) private var engine
-    @State private var editingEntry: Entry?
 
     var body: some View {
         Section("Timeline") {
@@ -27,8 +28,15 @@ struct EntryTimelineSection: View {
                 }
             }
         }
-        .sheet(item: $editingEntry) { entry in
-            EditEntryTimeSheet(entry: entry, range: night.entryTimeRange())
+    }
+}
+
+extension View {
+    /// Attach outside the `List`: a sheet presented from inside `List` content closes
+    /// itself whenever the `List` recreates that content, e.g. when the night re-renders.
+    func entryTimeEditor(_ entry: Binding<Entry?>) -> some View {
+        sheet(item: entry) { entry in
+            EditEntryTimeSheet(entry: entry)
         }
     }
 }
@@ -58,9 +66,9 @@ private struct EditEntryTimeSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var time: Date
 
-    init(entry: Entry, range: ClosedRange<Date>) {
+    init(entry: Entry) {
         self.entry = entry
-        self.range = range
+        self.range = entry.night?.entryTimeRange() ?? entry.timestamp...entry.timestamp
         _time = State(initialValue: entry.timestamp)
     }
 

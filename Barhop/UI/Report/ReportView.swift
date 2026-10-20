@@ -6,6 +6,7 @@ struct ReportView: View {
     let night: Night
     @Environment(NightEngine.self) private var engine
     @State private var selectedVenue: Venue?
+    @State private var editingEntry: Entry?
 
     private var hasLocation: Bool { !night.trailPoints.isEmpty || !night.venues.isEmpty }
 
@@ -14,7 +15,7 @@ struct ReportView: View {
         List {
             if hasLocation {
                 Section {
-                    TrailMap(night: night, isLive: false)
+                    TrailMap(night: night, isLive: false, selectedVenue: $selectedVenue)
                         .frame(height: Theme.Size.reportMapHeight)
                         .listRowInsets(EdgeInsets())
                 }
@@ -23,7 +24,7 @@ struct ReportView: View {
             if !stats.venues.isEmpty {
                 venuesSection(stats.venues)
             }
-            EntryTimelineSection(night: night)
+            EntryTimelineSection(night: night, editingEntry: $editingEntry)
             Section {
                 Toggle("Show map on share", isOn: Binding(
                     get: { night.showMapOnShare },
@@ -35,9 +36,11 @@ struct ReportView: View {
         .toolbar {
             shareMenu
         }
+        // Sheets hang off the List, not its rows, so they survive the List re-rendering.
         .sheet(item: $selectedVenue) { venue in
             VenueSheet(venue: venue)
         }
+        .entryTimeEditor($editingEntry)
     }
 
     private func statsSection(_ stats: ReportStats) -> some View {

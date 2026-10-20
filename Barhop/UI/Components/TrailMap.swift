@@ -2,17 +2,19 @@ import MapKit
 import SwiftUI
 
 /// The night's trail: solid segments, dashed connectors across tracking gaps, venue pins.
-/// Tapping a pin opens the rename sheet.
+/// Tapping a pin selects its venue; the caller presents the rename sheet outside any `List`,
+/// since a sheet presented from inside `List` content closes itself when the row is recreated.
 struct TrailMap: View {
     let night: Night
     /// Live night follows the user; the report frames the whole trail.
     let isLive: Bool
+    @Binding var selectedVenue: Venue?
     @State private var position: MapCameraPosition
-    @State private var selectedVenue: Venue?
 
-    init(night: Night, isLive: Bool) {
+    init(night: Night, isLive: Bool, selectedVenue: Binding<Venue?>) {
         self.night = night
         self.isLive = isLive
+        _selectedVenue = selectedVenue
         _position = State(initialValue: isLive ? .userLocation(fallback: .automatic) : .automatic)
     }
 
@@ -47,9 +49,6 @@ struct TrailMap: View {
         .mapControls {
             if isLive { MapUserLocationButton() }
             MapCompass()
-        }
-        .sheet(item: $selectedVenue) { venue in
-            VenueSheet(venue: venue)
         }
     }
 }

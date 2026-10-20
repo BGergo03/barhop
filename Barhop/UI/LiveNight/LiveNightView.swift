@@ -4,6 +4,8 @@ struct LiveNightView: View {
     let night: Night
     @Environment(NightEngine.self) private var engine
     @State private var confirmsEnd = false
+    @State private var selectedVenue: Venue?
+    @State private var editingEntry: Entry?
 
     var body: some View {
         VStack(spacing: Theme.Spacing.medium) {
@@ -11,7 +13,7 @@ struct LiveNightView: View {
                 LocationOffPrompt()
                     .padding(.horizontal, Theme.Spacing.medium)
             } else {
-                TrailMap(night: night, isLive: true)
+                TrailMap(night: night, isLive: true, selectedVenue: $selectedVenue)
                     .frame(height: Theme.Size.liveMapHeight)
             }
             header
@@ -23,7 +25,7 @@ struct LiveNightView: View {
             .padding(.horizontal, Theme.Spacing.medium)
 
             List {
-                EntryTimelineSection(night: night)
+                EntryTimelineSection(night: night, editingEntry: $editingEntry)
             }
         }
         .navigationTitle(night.title)
@@ -33,6 +35,11 @@ struct LiveNightView: View {
                 confirmsEnd = true
             }
         }
+        // Sheets hang off the screen, not the List rows, so they survive the List re-rendering.
+        .sheet(item: $selectedVenue) { venue in
+            VenueSheet(venue: venue)
+        }
+        .entryTimeEditor($editingEntry)
         .confirmationDialog("End this night?", isPresented: $confirmsEnd, titleVisibility: .visible) {
             Button("End night", role: .destructive) {
                 engine.endNight(night)
