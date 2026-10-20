@@ -1,15 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Add sample data" : {
-
-    },
-    "Five made-up nights around Kazinczy utca, with their places and prices. Removing them leaves your own nights alone." : {
-
-    },
-    "Remove sample data" : {
-
-    },
     "—" : {
 
     },
@@ -50,7 +41,16 @@
     "+1 Beer" : {
 
     },
+    "0" : {
+
+    },
     "A map of your places is coming soon." : {
+
+    },
+    "Add a price" : {
+
+    },
+    "Add sample data" : {
 
     },
     "Adds a beer to your night, starting a night if none is active." : {
@@ -80,7 +80,16 @@
     "Card (PNG)" : {
 
     },
+    "Category" : {
+
+    },
     "Close" : {
+
+    },
+    "Cocktail" : {
+
+    },
+    "Cocktails" : {
 
     },
     "Copy sticker" : {
@@ -122,6 +131,9 @@
     "Entry ID" : {
 
     },
+    "Five made-up nights around Kazinczy utca, with their places and prices. Removing them leaves your own nights alone." : {
+
+    },
     "Home" : {
 
     },
@@ -149,6 +161,9 @@
     "Map" : {
 
     },
+    "Menu" : {
+
+    },
     "Name" : {
 
     },
@@ -164,7 +179,13 @@
     "No beers yet" : {
 
     },
+    "No drinks yet. Add what you see on the menu." : {
+
+    },
     "No places found nearby" : {
+
+    },
+    "No size" : {
 
     },
     "On the move" : {
@@ -173,13 +194,22 @@
     "Open Barhop to log beers." : {
 
     },
+    "Open in Maps" : {
+
+    },
     "Open night" : {
 
     },
     "Open place" : {
 
     },
+    "Other" : {
+
+    },
     "Places" : {
+
+    },
+    "Price" : {
 
     },
     "Profile" : {
@@ -191,6 +221,9 @@
     "Recent nights" : {
 
     },
+    "Remove sample data" : {
+
+    },
     "Rename" : {
 
     },
@@ -198,6 +231,12 @@
 
     },
     "Save" : {
+
+    },
+    "Saved" : {
+
+    },
+    "Saved as seen today. An older price for the same drink stays in its history." : {
 
     },
     "Search" : {
@@ -218,7 +257,25 @@
     "Share your night" : {
 
     },
+    "Shot" : {
+
+    },
+    "Shots" : {
+
+    },
     "Show map on share" : {
+
+    },
+    "Size" : {
+
+    },
+    "Size in ml" : {
+
+    },
+    "Soft drink" : {
+
+    },
+    "Soft drinks" : {
 
     },
     "Start a night to map your route and count your beers." : {
@@ -251,6 +308,9 @@
     "Undo last beer" : {
 
     },
+    "Wine" : {
+
+    },
     "Your nights will show up here." : {
 
     },
@@ -258,6 +318,12 @@
 
     },
     "Your visits will show up here." : {
+
+    },
+    "ml" : {
+
+    },
+    "today" : {
 
     }
   },

@@ -52,7 +52,7 @@ struct TrailMap: View {
 }
 
 /// An amber disc with a mug, ringed so it reads on any map.
-private struct VenuePin: View {
+struct VenuePin: View {
     var body: some View {
         Image(systemName: "mug.fill")
             .font(Theme.Typography.venuePin)

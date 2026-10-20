@@ -118,6 +118,7 @@ enum Theme {
         static let beerButtonHeight: CGFloat = 76
         static let iconButton: CGFloat = 40
         static let reportMapHeight: CGFloat = 260
+        static let placeMapHeight: CGFloat = 170
         /// Room the live map leaves for the floating stats panel and "+1 Beer" panel.
         static let liveMapTopInset: CGFloat = 190
         static let liveMapBottomInset: CGFloat = 220

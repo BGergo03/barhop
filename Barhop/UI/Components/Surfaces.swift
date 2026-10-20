@@ -78,14 +78,19 @@ extension View {
 
 /// Small uppercase label above a group ("PAST NIGHTS").
 struct SectionLabel: View {
-    let title: LocalizedStringKey
+    let title: Text
 
     init(_ title: LocalizedStringKey) {
+        self.title = Text(title)
+    }
+
+    /// For titles that aren't literals, e.g. a drink category's.
+    init(_ title: Text) {
         self.title = title
     }
 
     var body: some View {
-        Text(title)
+        title
             .textCase(.uppercase)
             .font(Theme.Typography.sectionLabel)
             .tracking(Theme.Typography.labelTracking)
