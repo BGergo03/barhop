@@ -33,6 +33,20 @@ struct SecondaryButtonStyle: ButtonStyle {
     }
 }
 
+/// A small amber capsule, e.g. the night pill's "+1".
+struct AccentCapsuleButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(Theme.Typography.secondaryButton)
+            .foregroundStyle(Theme.Palette.onAccent)
+            .padding(.horizontal, Theme.Spacing.medium)
+            .padding(.vertical, Theme.Spacing.xSmall)
+            .background(Theme.Gradients.accent, in: .capsule)
+            .scaleEffect(configuration.isPressed ? Theme.Motion.pressedScale : 1)
+            .animation(Theme.Motion.press, value: configuration.isPressed)
+    }
+}
+
 /// Round glyph button, e.g. the Settings gear.
 struct IconButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -55,6 +69,10 @@ extension ButtonStyle where Self == PrimaryButtonStyle {
 extension ButtonStyle where Self == SecondaryButtonStyle {
     static var secondary: SecondaryButtonStyle { SecondaryButtonStyle() }
     static var destructiveSecondary: SecondaryButtonStyle { SecondaryButtonStyle(role: .destructive) }
+}
+
+extension ButtonStyle where Self == AccentCapsuleButtonStyle {
+    static var accentCapsule: AccentCapsuleButtonStyle { AccentCapsuleButtonStyle() }
 }
 
 extension ButtonStyle where Self == IconButtonStyle {

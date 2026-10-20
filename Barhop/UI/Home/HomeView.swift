@@ -3,11 +3,20 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(NightEngine.self) private var engine
+    @Environment(AppRouter.self) private var router
     @Query(filter: #Predicate<Night> { $0.endedAt == nil }) private var activeNights: [Night]
-    @Query(filter: #Predicate<Night> { $0.endedAt != nil }, sort: \Night.startedAt, order: .reverse)
-    private var pastNights: [Night]
-    @State private var nightPendingDeletion: Night?
-    @State private var showsSettings = false
+    @Query(Self.recentNightsDescriptor) private var recentNights: [Night]
+
+    private static let recentNightsLimit = 3
+
+    private static var recentNightsDescriptor: FetchDescriptor<Night> {
+        var descriptor = FetchDescriptor<Night>(
+            predicate: #Predicate { $0.endedAt != nil },
+            sortBy: [SortDescriptor(\.startedAt, order: .reverse)]
+        )
+        descriptor.fetchLimit = recentNightsLimit
+        return descriptor
+    }
 
     var body: some View {
         List {
@@ -15,26 +24,17 @@ struct HomeView: View {
                 .floatingBareRow()
             hero
                 .floatingBareRow()
-            SectionLabel("Past nights")
-                .padding(.leading, Theme.Spacing.xSmall)
+            recentNightsLabel
                 .floatingBareRow()
-            if pastNights.isEmpty {
+            if recentNights.isEmpty {
                 EmptyStateRow(systemImage: "moon.stars", message: "Your nights will show up here.")
                     .floatingCardRow()
             }
-            ForEach(pastNights) { night in
+            ForEach(recentNights) { night in
                 NavigationLink(value: Route.report(night)) {
                     NightRow(night: night)
                 }
                 .floatingCardRow()
-                .swipeActions {
-                    // No destructive role: it makes the List remove the row before the
-                    // confirmation dialog, then put it back while the dialog is up.
-                    Button("Delete") {
-                        nightPendingDeletion = night
-                    }
-                    .tint(Theme.Palette.danger)
-                }
             }
         }
         .floatingCardList()
@@ -44,44 +44,36 @@ struct HomeView: View {
                 .allowsHitTesting(false)
         }
         .toolbar(.hidden, for: .navigationBar)
-        .sheet(isPresented: $showsSettings) {
-            SettingsView()
-        }
-        .confirmationDialog(
-            "Delete this night?",
-            isPresented: Binding(
-                get: { nightPendingDeletion != nil },
-                set: { if !$0 { nightPendingDeletion = nil } }
-            ),
-            titleVisibility: .visible,
-            presenting: nightPendingDeletion
-        ) { night in
-            Button("Delete night", role: .destructive) {
-                engine.deleteNight(night)
-            }
-        } message: { _ in
-            Text("Its beers, route and places will be removed.")
-        }
     }
 
     private var header: some View {
+        Wordmark()
+            .frame(maxWidth: .infinity, minHeight: Theme.Size.iconButton, alignment: .leading)
+            .padding(.top, Theme.Spacing.small)
+    }
+
+    private var recentNightsLabel: some View {
         HStack {
-            Wordmark()
+            SectionLabel("Recent nights")
             Spacer()
-            Button {
-                showsSettings = true
-            } label: {
-                Label("Settings", systemImage: "gearshape.fill")
+            if !recentNights.isEmpty {
+                Button("See all") {
+                    router.showAllNights()
+                }
+                .font(Theme.Typography.secondaryButton)
+                .buttonStyle(.plain)
+                .foregroundStyle(Theme.Palette.accent)
             }
-            .buttonStyle(.icon)
         }
-        .padding(.top, Theme.Spacing.small)
+        .padding(.horizontal, Theme.Spacing.xSmall)
     }
 
     @ViewBuilder
     private var hero: some View {
         if let active = activeNights.first {
-            NavigationLink(value: Route.live(active)) {
+            Button {
+                router.openLiveNight(active)
+            } label: {
                 ActiveNightCard(night: active)
             }
             .buttonStyle(.plain)
@@ -143,45 +135,5 @@ private struct ActiveNightCard: View {
         .shadow(color: Theme.Palette.glow, radius: Theme.Shadow.glowRadius, y: Theme.Shadow.glowOffset)
         .padding(.top, Theme.Spacing.small)
         .padding(.bottom, Theme.Shadow.glowRadius + Theme.Shadow.glowOffset)
-    }
-}
-
-private struct NightRow: View {
-    let night: Night
-
-    var body: some View {
-        HStack(spacing: Theme.Spacing.medium) {
-            VStack(alignment: .leading, spacing: Theme.Spacing.small) {
-                Text(night.title)
-                    .font(Theme.Typography.headline)
-                    .foregroundStyle(Theme.Palette.primaryText)
-                HStack(spacing: Theme.Spacing.medium) {
-                    Label(night.duration().durationText, systemImage: "clock")
-                    Label("\(night.beerCount)", systemImage: "mug.fill")
-                    Label("\(night.venues.count)", systemImage: "mappin")
-                }
-                .labelStyle(CompactLabelStyle())
-                .font(Theme.Typography.caption)
-                .foregroundStyle(Theme.Palette.secondaryText)
-            }
-            Spacer(minLength: 0)
-            if !night.trailPoints.isEmpty {
-                TrailSketch(segments: TrailGeometry.segmentPoints(night.trailPoints), venues: night.venues.map(\.mapPoint))
-                    .frame(width: Theme.Size.trailThumbnail.width, height: Theme.Size.trailThumbnail.height)
-                    .background(Theme.Palette.surfaceRaised, in: .rect(cornerRadius: Theme.Radius.thumbnail))
-            }
-        }
-        .padding(.vertical, Theme.Spacing.xSmall)
-    }
-}
-
-/// Icon and text close together, icon in the accent color.
-struct CompactLabelStyle: LabelStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        HStack(spacing: Theme.Spacing.xSmall) {
-            configuration.icon
-                .foregroundStyle(Theme.Palette.accent)
-            configuration.title
-        }
     }
 }

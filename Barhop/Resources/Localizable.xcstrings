@@ -146,9 +146,6 @@
     "Open Barhop to log beers." : {
 
     },
-    "Past nights" : {
-
-    },
     "Places" : {
 
     },
@@ -204,6 +201,42 @@
 
     },
     "Your nights will show up here." : {
+
+    },
+    "Recent nights" : {
+
+    },
+    "See all" : {
+
+    },
+    "+1" : {
+
+    },
+    "Close" : {
+
+    },
+    "Profile" : {
+
+    },
+    "Home" : {
+
+    },
+    "Search" : {
+
+    },
+    "Map" : {
+
+    },
+    "Nights" : {
+
+    },
+    "Open night" : {
+
+    },
+    "Searching places and drinks is coming soon." : {
+
+    },
+    "A map of your places is coming soon." : {
 
     }
   },

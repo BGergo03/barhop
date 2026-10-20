@@ -128,6 +128,8 @@ enum Theme {
         static let hairline: CGFloat = 1
         /// `Text(_, style: .timer)` claims all available width; this keeps the Dynamic Island compact.
         static let compactTimerWidth: CGFloat = 52
+        /// Same reason, for the night pill above the tab bar; fits "0:00:00".
+        static let pillTimerWidth: CGFloat = 72
         /// 1080×1920 px at the 3× render scale.
         static let shareCard = CGSize(width: 360, height: 640)
         static let shareCardPadding: CGFloat = 28

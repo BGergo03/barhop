@@ -1,10 +1,12 @@
 import SwiftUI
 
-/// The night in progress: the map fills the screen, with the stats floating on top and the
-/// big "+1 Beer" at the bottom. The timeline opens as a sheet.
+/// The night in progress, as a full-screen cover over the tabs: the map fills the screen, with
+/// the stats floating on top and the big "+1 Beer" at the bottom. The timeline opens as a sheet.
+/// Closing it leaves the night running, reachable from the pill above the tab bar.
 struct LiveNightView: View {
     let night: Night
     @Environment(NightEngine.self) private var engine
+    @Environment(\.dismiss) private var dismiss
     @State private var confirmsEnd = false
     @State private var selectedVenue: Venue?
     @State private var editingEntry: Entry?
@@ -29,10 +31,19 @@ struct LiveNightView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
-            Button("End night", role: .destructive) {
-                confirmsEnd = true
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Label("Close", systemImage: "chevron.down")
+                }
             }
-            .buttonStyle(.destructiveSecondary)
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("End night", role: .destructive) {
+                    confirmsEnd = true
+                }
+                .buttonStyle(.destructiveSecondary)
+            }
         }
         .sheet(item: $selectedVenue) { venue in
             VenueSheet(venue: venue)
