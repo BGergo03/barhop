@@ -23,7 +23,7 @@ enum TrailGeometry {
     }
 
     /// Straight connectors from the end of each segment to the start of the next, drawn dashed.
-    static func gaps(between segments: [[CLLocationCoordinate2D]]) -> [[CLLocationCoordinate2D]] {
+    static func gaps<Point>(between segments: [[Point]]) -> [[Point]] {
         zip(segments, segments.dropFirst()).compactMap { previous, next in
             guard let end = previous.last, let start = next.first else { return nil }
             return [end, start]

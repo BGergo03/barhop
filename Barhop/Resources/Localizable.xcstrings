@@ -1,11 +1,36 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ +%lld more" : {
+
+    },
     "%@ per hour" : {
 
     },
     "%lld hours" : {
 
+    },
+    "%lld places" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld place"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld places"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "+1 Beer" : {
 
