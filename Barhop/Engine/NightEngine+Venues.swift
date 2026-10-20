@@ -3,11 +3,20 @@ import SwiftData
 
 /// Venue detection, provisional venues and naming (SPEC §6).
 extension NightEngine {
-    private static let candidateLimit = 5
+    static let candidateLimit = 5
 
+    /// A custom name. Only the stop changes: its place, if any, keeps its own name (SPEC §6).
     func renameVenue(_ venue: Venue, to name: String) {
         venue.name = name
         venue.nameSource = .user
+        save()
+    }
+
+    /// A Maps candidate picked in the fix-up sheet: names the stop and links it to that place.
+    func renameVenue(_ venue: Venue, to candidate: VenueCandidate) {
+        venue.name = candidate.name
+        venue.nameSource = .user
+        places.link(venue, to: candidate)
         save()
     }
 
@@ -79,7 +88,8 @@ extension NightEngine {
         return venue
     }
 
-    /// Nearest nightlife POI, else the street address. Never overrides a name the user picked.
+    /// Nearest nightlife POI (linked to its place), else the street address. Never overrides
+    /// a name the user picked.
     private func autoName(_ venue: Venue) {
         guard venue.nameSource != .user else { return }
         let venueID = venue.id
@@ -93,9 +103,12 @@ extension NightEngine {
             if let candidate {
                 venue.name = candidate.name
                 venue.nameSource = .auto
+                places.link(venue, to: candidate)
             } else if let address {
                 venue.name = address
                 venue.nameSource = .address
+                // A provisional venue may have been linked at its first position; the stay moved it.
+                places.unlink(venue)
             } else {
                 return
             }

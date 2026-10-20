@@ -16,12 +16,13 @@ final class NightEngine {
         reminders: NotificationService()
     )
 
-    // Shared with the extensions in NightEngine+Tracking.swift, +Venues.swift, +LiveActivity.swift and +AutoClose.swift.
+    // Shared with the extensions in NightEngine+Tracking.swift, +Venues.swift, +Places.swift, +LiveActivity.swift and +AutoClose.swift.
     @ObservationIgnored let context: ModelContext
     @ObservationIgnored let location: LocationProviding
     @ObservationIgnored let namer: VenueNaming
     @ObservationIgnored let liveActivity: LiveActivityControlling
     @ObservationIgnored let reminders: StillOutReminding
+    @ObservationIgnored let places: PlaceStore
     @ObservationIgnored let autoClose: @MainActor () -> AutoClose
     @ObservationIgnored let logger = Logger(subsystem: "com.bgergo03.barhop", category: "NightEngine")
     @ObservationIgnored var trackedNight: Night?
@@ -29,6 +30,7 @@ final class NightEngine {
     @ObservationIgnored var stopDetector = StopDetector()
     @ObservationIgnored var lastTrailSave = Date.distantPast
     @ObservationIgnored var undoOffer: UndoOffer?
+    @ObservationIgnored var isBackfillingPlaces = false
 
     init(
         context: ModelContext,
@@ -43,6 +45,7 @@ final class NightEngine {
         self.namer = namer
         self.liveActivity = liveActivity
         self.reminders = reminders
+        self.places = PlaceStore(context: context)
         self.autoClose = autoClose
         reminders.onResponse = { [weak self] response, nightID in
             self?.handleStillOutResponse(response, nightID: nightID)
